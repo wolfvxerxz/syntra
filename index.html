@@ -1,617 +1,1045 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Syntra — Revenue Operating System</title>
-<link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=Onest:wght@500;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #121212;
-  --surface: #1A1A1A;
-  --surface2: #1B1B1B;
-  --border: #292929;
-  --txt: #FFFFFF;
-  --txt-muted: rgba(255,255,255,0.7);
-  --txt-dim: #8A8F93;
-  --accent: #6C47FF;
-  --accent-dark: #4F2FD4;
-  --accent-glow: rgba(108,71,255,0.35);
-  --tag-blue: #7C6AFF;
-  --tag-green: #10B981;
-  --font: 'Rethink Sans', sans-serif;
-  --mono: 'JetBrains Mono', monospace;
-  --logo-font: 'Onest', sans-serif;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--txt);font-family:var(--font);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TradeFlow — Companies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ══ NAV ══ */
-.nav-wrap{
-  position:fixed;top:0;left:0;right:0;z-index:200;
-  border-bottom:1px solid var(--border);
-  background:rgba(14,14,14,.92);
-  backdrop-filter:blur(16px);
-}
-nav{
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  align-items:center;
-  max-width:1280px;margin:0 auto;
-  padding:0 40px;height:52px;
-  gap:24px;
-}
-.nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;justify-self:start}
-.logo-icon{width:20px;height:15px;flex-shrink:0}
-.logo-icon svg{width:100%;height:100%}
-.logo-txt{
-  font-family:var(--logo-font);font-weight:700;font-size:14px;
-  text-transform:uppercase;color:#fff;letter-spacing:2px;
-}
-/* Centered pill for links */
-.nav-links{
-  display:flex;align-items:center;gap:2px;list-style:none;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:10px;padding:4px;
-}
-.nav-links a{
-  font-family:var(--mono);font-weight:500;font-size:12px;text-transform:uppercase;
-  color:rgba(255,255,255,.6);text-decoration:none;
-  padding:5px 12px;border-radius:7px;
-  transition:background .18s,color .18s;white-space:nowrap;
-}
-.nav-links a:hover{background:rgba(255,255,255,.1);color:#fff}
-.nav-links a.active{background:rgba(108,71,255,.2);color:#a78bff}
-/* Right side */
-.nav-right{display:flex;align-items:center;gap:12px;justify-self:end}
-.nav-cta{
-  display:flex;align-items:center;gap:6px;
-  padding:7px 16px;
-  background:var(--accent);
-  border-radius:8px;
-  font-family:var(--mono);font-weight:600;font-size:12px;text-transform:uppercase;
-  color:#fff;text-decoration:none;white-space:nowrap;
-  box-shadow:0 0 0 1px rgba(108,71,255,.5),0 4px 16px rgba(108,71,255,.25);
-  transition:filter .2s,transform .1s;
-}
-.nav-cta:hover{filter:brightness(1.15);transform:translateY(-1px)}
-.nav-cta svg{width:12px;height:12px;flex-shrink:0}
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background: #F2F2F2;
+      font-family: 'Onest', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
 
-/* ══ HERO ══ */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 80px 0;position:relative;overflow:hidden;background:radial-gradient(ellipse 70% 50% at 50% 20%,rgba(108,71,255,.1) 0%,transparent 70%)}
-.hero-dashed{position:absolute;top:45px;left:0;right:0;height:1px;border-top:1px dashed var(--border);pointer-events:none}
-.hero-text{text-align:center;max-width:820px;position:relative;z-index:2}
-.hero-text h1{font-size:clamp(44px,5vw,62px);font-weight:400;line-height:1;letter-spacing:-3px;color:#fff;margin-bottom:20px}
-.hero-text h1 em{font-style:normal;color:var(--accent)}
-.hero-sub{font-size:18px;line-height:28px;color:var(--txt-muted);max-width:680px;margin:0 auto 32px}
-.hero-actions{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+    .dash {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+      background: #F2F2F2;
+    }
 
-.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:0 18px;height:40px;background:radial-gradient(42% 100% at 50% 0%,rgba(255,255,255,.22) 0%,transparent 100%),var(--accent);border:1px solid rgba(255,255,255,.1);border-radius:8px;box-shadow:0 0 0 .7px var(--accent-dark);font-family:var(--mono);font-weight:500;font-size:13px;text-transform:uppercase;color:#fff;text-decoration:none;cursor:pointer;transition:transform .15s,box-shadow .15s}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(108,71,255,.35),0 0 0 .7px var(--accent-dark)}
-.btn-secondary{display:inline-flex;align-items:center;gap:8px;padding:0 16px;height:40px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.08);border-radius:8px;font-family:var(--mono);font-weight:500;font-size:13px;text-transform:uppercase;color:#fff;text-decoration:none;cursor:pointer;transition:background .2s}
-.btn-secondary:hover{background:rgba(255,255,255,.15)}
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: #FAFAFA;
+      border-right: 1px solid #E8E8E8;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 16px 0;
+      gap: 6px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
 
-/* HERO DASHBOARD */
-.hero-dash{position:relative;z-index:2;margin-top:72px;width:100%;max-width:1060px;display:flex;align-items:flex-end;justify-content:center}
-.hero-fade{position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(to top,var(--bg) 0%,transparent 100%);pointer-events:none;z-index:10}
-.dpanel{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;position:relative;flex-shrink:0}
-.dlabel{font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--txt-dim);letter-spacing:1px;padding:14px 16px 0}
-.dstat{font-size:26px;font-weight:700;color:#fff;padding:4px 16px 0}
-.dstat-sub{font-size:12px;color:var(--txt-muted);padding:2px 16px 10px}
-.dbar-row{display:flex;align-items:flex-end;gap:5px;height:68px;padding:0 16px 14px}
-.dbar{flex:1;border-radius:3px 3px 0 0;background:var(--border)}
-.dbar.a{background:var(--accent)}
-.dbar.b{background:rgba(108,71,255,.5)}
-.dcenter-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border)}
-.dcenter-title{font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--txt-dim);letter-spacing:1px}
-.dpill{font-family:var(--mono);font-size:10px;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:rgba(16,185,129,.15);color:#10B981}
-.prow{display:flex;align-items:center;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.04);gap:10px}
-.prow:last-child{border-bottom:none}
-.pdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.pname{flex:1;font-size:13px;color:var(--txt)}
-.pbadge{font-family:var(--mono);font-size:10px;text-transform:uppercase;padding:2px 7px;border-radius:4px;flex-shrink:0}
-.s-new{background:rgba(59,130,246,.2);color:#3B82F6}
-.s-qual{background:rgba(16,185,129,.2);color:#10B981}
-.s-prop{background:rgba(108,71,255,.2);color:var(--accent)}
-.s-won{background:rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
-.pval{font-family:var(--mono);font-size:12px;font-weight:600;color:#fff;width:68px;text-align:right;flex-shrink:0}
-.win-ring-wrap{display:flex;align-items:center;justify-content:center;padding:14px}
-.win-ring{width:88px;height:88px;border-radius:50%;background:conic-gradient(var(--accent) 0% 62%,var(--border) 62% 100%);display:flex;align-items:center;justify-content:center;position:relative}
-.win-ring::after{content:'';position:absolute;inset:12px;border-radius:50%;background:var(--surface)}
-.win-ring-val{position:relative;z-index:2;font-size:15px;font-weight:700;color:#fff;font-family:var(--mono)}
-.wstat-row{display:flex;justify-content:space-between;align-items:center;padding:5px 16px}
-.wstat-l{font-size:12px;color:var(--txt-muted)}
-.wstat-v{font-family:var(--mono);font-size:12px;font-weight:600;color:#fff}
-.wstat-v.pos{color:#10B981}
+    .ws-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 0 8px;
+    }
 
-/* ══ SECTIONS ══ */
-.sect{width:100%;padding:96px 80px}
-.sect-inner{max-width:1200px;margin:0 auto}
-.sect-head{text-align:center;margin-bottom:64px}
-.sect-head h2{font-size:clamp(34px,4vw,48px);font-weight:500;line-height:1;color:#fff;margin-bottom:16px}
-.sect-head h2 span{color:var(--accent)}
-.sect-head p{font-size:20px;line-height:28px;color:var(--txt-muted);max-width:672px;margin:0 auto}
+    .ws-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-/* ══ BENTO ══ */
-.bento{display:grid;grid-template-columns:1fr 1fr;width:1024px;max-width:100%;margin:0 auto;border:1px solid var(--border);background:var(--surface)}
-.bcell{padding:24px;border:1px solid var(--border);display:flex;flex-direction:column;gap:14px;min-height:420px;position:relative;overflow:hidden;transition:background .2s}
-.bcell:hover{background:rgba(255,255,255,.02)}
-.accent-bar{position:absolute;left:0;top:90px;width:2px;height:20px;background:var(--accent)}
-.bvis{width:100%;height:185px;background:var(--bg);border-radius:6px;display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;border:1px solid var(--border)}
-.bvis-head{padding:8px 12px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:9px;text-transform:uppercase;color:var(--txt-dim);letter-spacing:1px;display:flex;justify-content:space-between;align-items:center}
-.vdot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px var(--accent)}
-.vrows{display:flex;flex-direction:column;flex:1;overflow:hidden}
-.vrow{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
-.vrow:last-child{border-bottom:none}
-.vrn{flex:1;color:var(--txt-muted)}
-.vbadge{font-family:var(--mono);font-size:9px;text-transform:uppercase;padding:2px 6px;border-radius:3px}
-.b-run{background:rgba(108,71,255,.2);color:var(--accent)}
-.b-que{background:rgba(59,130,246,.2);color:#3B82F6}
-.b-don{background:rgba(16,185,129,.2);color:#10B981}
-.vnodes{display:flex;align-items:center;justify-content:center;gap:0;flex:1;padding:16px}
-.vnode{width:44px;height:44px;border-radius:50%;background:var(--border);border:2px solid rgba(108,71,255,.3);display:flex;align-items:center;justify-content:center;font-size:15px}
-.vnode.main{width:58px;height:58px;background:rgba(108,71,255,.1);border-color:var(--accent);box-shadow:0 0 18px rgba(108,71,255,.25)}
-.vconn{width:24px;height:2px;background:rgba(108,71,255,.25)}
-.vtable{display:flex;flex-direction:column;flex:1;overflow:hidden}
-.vtable-head{display:grid;grid-template-columns:1fr 76px 56px;padding:6px 12px;background:rgba(255,255,255,.04);font-family:var(--mono);font-size:9px;text-transform:uppercase;color:var(--txt-dim)}
-.vtable-row{display:grid;grid-template-columns:1fr 76px 56px;padding:7px 12px;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px;align-items:center}
-.vtable-row:last-child{border-bottom:none}
-.vcn{color:var(--txt-muted)}
-.vcb{font-family:var(--mono);font-size:9px;text-transform:uppercase;padding:2px 5px;border-radius:3px;width:fit-content}
-.vcv{font-family:var(--mono);font-size:11px;font-weight:600;color:#fff;text-align:right}
-.vbars{display:flex;align-items:flex-end;gap:4px;padding:0 12px 8px}
-.vb{flex:1;border-radius:3px 3px 0 0;background:var(--border)}
-.vb.a{background:var(--accent)}
-.vb.b{background:rgba(108,71,255,.55)}
-.vb.c{background:rgba(108,71,255,.25)}
-.btag{display:inline-flex;align-items:center;padding:4px 10px;border-radius:9999px;font-weight:600;font-size:13px;text-transform:uppercase;color:#fff;width:fit-content}
-.tag-b{background:var(--tag-blue)}
-.tag-g{background:var(--tag-green)}
-.btitle{font-size:18px;font-weight:500;line-height:28px;color:#fff}
-.bdesc{font-size:15px;line-height:24px;color:var(--txt-muted);flex:1}
-.blink{display:flex;align-items:center;gap:8px;font-size:15px;color:#fff;text-decoration:none;margin-top:auto}
-.blink svg{width:15px;height:15px;flex-shrink:0}
+    .brand-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      background: linear-gradient(111deg, #69BFF9 11%, #B96AF3 42%, #E9685E 61%, #F2AC3E 98%);
+      box-shadow: 0 1px 3px rgba(8,8,8,.18), inset 0 1px 1px rgba(255,255,255,.2);
+      flex-shrink: 0;
+    }
 
-/* ══ HOW IT WORKS ══ */
-.how-sect{padding:96px 128px}
-.how-inner{max-width:1024px;margin:0 auto}
-.how-head{text-align:center;margin-bottom:64px}
-.how-head h2{font-size:clamp(34px,4vw,48px);font-weight:500;color:#fff;margin-bottom:16px}
-.how-head h2 span{color:var(--accent)}
-.how-head p{font-size:18px;line-height:28px;color:var(--txt-muted);max-width:720px;margin:0 auto 14px}
-.how-cards{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid var(--border);background:var(--surface);position:relative}
-.how-cards::before{content:'';position:absolute;top:-1px;left:-20px;width:20px;height:1px;background:var(--border)}
-.how-cards::after{content:'';position:absolute;top:-1px;right:-20px;width:20px;height:1px;background:var(--border)}
-.hcard{padding:24px;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:14px;position:relative}
-.hcard:last-child{border-right:none}
-.hicon{width:52px;height:46px;border-radius:8px;background:linear-gradient(135deg,rgba(255,206,194,0) 17%,rgba(255,206,194,.32) 110%);display:flex;align-items:center;justify-content:center}
-.hicon-dot{width:10px;height:10px;background:var(--accent);border-radius:50%;box-shadow:0 0 14px var(--accent)}
-.htitle{font-size:20px;font-weight:500;line-height:28px;color:#fff}
-.hdesc{font-size:14px;line-height:20px;color:var(--txt-muted)}
-.how-footer{max-width:500px;margin:48px auto 0;text-align:center;font-size:18px;line-height:28px;color:var(--txt-muted)}
+    .ws-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #4F4F4F;
+      letter-spacing: -0.5px;
+    }
 
-/* ══ COMPARE ══ */
-.cmp-sect{padding:64px 192px;position:relative}
-.cmp-inner{max-width:896px;margin:0 auto}
-.cmp-title{font-size:clamp(30px,4vw,48px);font-weight:400;line-height:1.1;color:var(--accent);text-align:center;margin-bottom:48px}
-.cmp-wrap{border:1px solid var(--border);position:relative}
-.cmp-wrap::before{content:'';position:absolute;top:-1px;left:-20px;width:20px;height:1px;background:var(--border)}
-.cmp-wrap::after{content:'';position:absolute;bottom:-1px;right:-20px;width:20px;height:1px;background:var(--border)}
-table{width:100%;border-collapse:collapse}
-thead th{padding:16px 24px;background:var(--surface);font-family:var(--mono);font-weight:700;font-size:13px;text-transform:uppercase;color:#fff;text-align:center;border-right:1px solid var(--border)}
-thead th:first-child{text-align:left}
-thead th:last-child{background:rgba(108,71,255,.7);border-right:none}
-tbody td{padding:17px 24px;border-top:1px solid var(--border);border-right:1px solid var(--border);font-size:15px;color:#fff;text-align:center}
-tbody td:first-child{text-align:left;font-size:14px;color:var(--txt-muted)}
-tbody td:last-child{background:var(--accent);border-right:none;border-top:1px solid #fff;font-weight:600}
+    .ws-chevron { color: #8D9196; font-size: 10px; }
 
-/* ══ FAQ ══ */
-.faq-sect{padding:96px 40px}
-.faq-inner{display:grid;grid-template-columns:373px 1fr;gap:40px;max-width:1200px;margin:0 auto}
-.faq-h{font-size:42px;font-weight:500;line-height:50px;color:#fff}
-.faq-list{display:flex;flex-direction:column}
-.faq-item{border-top:1px solid var(--border);cursor:pointer}
-.faq-item.open{border-top-color:var(--accent)}
-.faq-q{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 0;font-size:16px;line-height:24px;color:#fff}
-.faq-item.open .faq-q{padding-bottom:0}
-.farr{width:20px;height:20px;flex-shrink:0;transition:transform .2s}
-.farr svg{width:20px;height:20px}
-.faq-item.open .farr{transform:rotate(180deg)}
-.faq-a{display:none;padding:14px 0;font-size:15px;line-height:24px;color:var(--txt-dim)}
-.faq-item.open .faq-a{display:block}
-.faq-a ul{padding-left:20px;margin-top:8px}
-.faq-a li{margin-bottom:4px;line-height:24px}
+    .ws-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #C0D5FF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: 600;
+      color: #3b5bdb;
+    }
 
-/* ══ CTA ══ */
-.cta-sect{position:relative;min-height:450px;display:flex;align-items:center;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden}
-.cta-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.3}
-.cta-inner{position:relative;z-index:2;padding:60px 80px;max-width:1280px;width:100%;margin:0 auto}
-.cta-inner h2{font-size:clamp(32px,4vw,48px);font-weight:400;line-height:1.1;letter-spacing:-2px;color:#fff;margin-bottom:20px}
-.cta-inner p{font-size:18px;line-height:28px;color:rgba(255,255,255,.85);max-width:432px;margin-bottom:32px}
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff;
+      border: 1px solid #EDEDED;
+      box-shadow: 0 1px 12px rgba(0,0,0,.02);
+      border-radius: 8px;
+      padding: 7px 8px;
+      font-size: 11px;
+      color: #C2C2C2;
+    }
 
-/* ══ FOOTER ══ */
-footer{background:var(--surface2);padding:64px}
-.foot-inner{max-width:1152px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
-.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:40px}
-.foot-brand{max-width:576px}
-.foot-logo{display:flex;align-items:center;gap:7px;text-decoration:none;margin-bottom:16px}
-.foot-desc{font-size:16px;line-height:24px;color:var(--txt-muted);margin-bottom:16px}
-.foot-nav{display:flex;gap:20px;flex-wrap:wrap}
-.foot-nav a{font-family:var(--mono);font-size:14px;text-transform:uppercase;color:#D8D5D1;text-decoration:none;transition:color .2s}
-.foot-nav a:hover{color:#fff}
-.foot-socials{display:flex;gap:8px}
-.soc{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);border-radius:12px;text-decoration:none;box-shadow:0 1px 2px rgba(0,0,0,.1);transition:background .2s}
-.soc:hover{background:rgba(255,255,255,.1)}
-.soc svg{width:18px;height:18px;fill:#fff}
-.foot-div{height:1px;background:linear-gradient(90deg,rgba(51,51,51,0) 0%,#333 50%,rgba(51,51,51,0) 100%)}
-.foot-bot{display:flex;justify-content:space-between;align-items:center;padding-top:20px}
-.foot-copy{font-size:15px;font-weight:500;color:#A19A95}
-.foot-legal{display:flex;gap:20px}
-.foot-legal a{font-size:15px;color:#D8D5D1;text-decoration:none;transition:color .2s}
-.foot-legal a:hover{color:#fff}
-</style>
+    .search-box span { flex: 1; }
+
+    .kbd {
+      background: #F0F0F0;
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 10px;
+      color: #4F4F4F;
+    }
+
+    .nav-section {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #53565A;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .nav-item:hover { background: #F0F0F0; }
+    .nav-item.active { background: #F0F0F0; color: #4F4F4F; font-weight: 500; }
+
+    .nav-icon {
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #53565A;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: #F43F5E;
+      border-radius: 50%;
+      width: 17px;
+      height: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .ws-label {
+      font-size: 11px;
+      color: #53565A;
+      padding: 2px 4px;
+      letter-spacing: 0.2px;
+    }
+
+    .divider { height: 1px; background: #E6E6E6; margin: 4px -4px; }
+
+    .nav-footer {
+      padding: 8px 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    /* ── MAIN ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      min-width: 0;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 64px;
+      border-bottom: 1px solid #EDEDED;
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+    }
+
+    .bc-item, .bc-current {
+      color: #53565A;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .bc-sep { color: #ADB7BD; font-size: 10px; }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .update-text { font-size: 12px; color: #52525B; }
+
+    .avatars { display: flex; }
+
+    .av {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      margin-right: -5px;
+      font-size: 7px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .share-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      background: #F2F2F2;
+      font-size: 13px;
+      font-weight: 500;
+      color: #53565A;
+      cursor: pointer;
+      border: none;
+    }
+
+    .entity-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 54px;
+      border-bottom: 1px solid #EDEDED;
+    }
+
+    .entity-left { display: flex; align-items: center; gap: 8px; }
+
+    .entity-name {
+      font-size: 17px;
+      font-weight: 600;
+      color: #4F4F4F;
+      letter-spacing: -0.4px;
+    }
+
+    .entity-star { color: #8D9196; font-size: 14px; cursor: pointer; }
+
+    .entity-actions { display: flex; align-items: center; gap: 8px; }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid #EDEDED;
+      font-size: 12px;
+      font-weight: 500;
+      color: #53565A;
+      cursor: pointer;
+      font-family: 'Onest', sans-serif;
+      transition: background 0.1s;
+    }
+
+    .action-btn:hover { background: #FAFAFA; }
+    .action-btn.primary { background: #1A1A1A; color: #fff; border-color: #1A1A1A; }
+    .action-btn.primary:hover { background: #2d2d2d; }
+
+    .tabs-bar {
+      display: flex;
+      align-items: flex-end;
+      padding: 0 24px;
+      border-bottom: 1px solid #EDEDED;
+    }
+
+    .tab {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 14px 12px;
+      font-size: 13px;
+      color: #8D9196;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.1s;
+    }
+
+    .tab:hover { color: #53565A; }
+    .tab.active { color: #4F4F4F; font-weight: 500; border-bottom-color: #4F4F4F; }
+    .tab-count { font-size: 11px; opacity: 0.7; }
+
+    /* ── CONTENT ── */
+    .content-area {
+      display: flex;
+      flex: 1;
+    }
+
+    .feed {
+      flex: 1;
+      min-width: 0;
+      overflow-y: auto;
+    }
+
+    .feed-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 24px 12px;
+    }
+
+    .feed-title { font-size: 17px; font-weight: 500; color: #09090B; }
+
+    .feed-controls { display: flex; gap: 8px; }
+
+    .ctrl-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      background: #fff;
+      border: 1px solid #F2F2F3;
+      font-size: 12px;
+      font-weight: 500;
+      color: #53565A;
+      cursor: pointer;
+      font-family: 'Onest', sans-serif;
+    }
+
+    .year-divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 4px 24px 10px;
+    }
+
+    .yr-label { font-size: 13px; font-weight: 600; color: #4F4F4F; white-space: nowrap; }
+    .yr-line { flex: 1; height: 1px; background: #E4E4E7; }
+
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 24px;
+      transition: background 0.1s;
+    }
+
+    .activity-item:hover { background: #FAFAFA; }
+
+    .act-icon-wrap {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      background: #F0F0F0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+      color: #53565A;
+    }
+
+    .act-body { flex: 1; min-width: 0; }
+
+    .act-line {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .act-avatar {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 7px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .act-text { font-size: 12px; font-weight: 500; color: #4F4F4F; }
+    .act-time { font-size: 11px; color: #A1A1AA; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 500;
+      white-space: nowrap;
+      font-family: 'Onest', sans-serif;
+    }
+
+    .pill-gray    { background: #F4F4F5; color: #52525B; border: 1px solid #E4E4E7; }
+    .pill-rose    { background: #FFE4E6; color: #F43F5E; border: 1px solid #FECDD3; }
+    .pill-sky     { background: #E0F2FE; color: #0EA5E9; border: 1px solid #BAE6FD; }
+    .pill-green   { background: #DCFCE7; color: #16A34A; border: 1px solid #BBF7D0; }
+    .pill-orange  { background: #FFEDD5; color: #EA580C; border: 1px solid #FED7AA; }
+    .pill-indigo  { background: #E0E7FF; color: #4F46E5; border: 1px solid #C7D2FE; }
+
+    .act-changes {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 0 4px 26px;
+    }
+
+    .change-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #53565A;
+    }
+
+    .change-key { font-weight: 500; color: #52525B; min-width: 120px; }
+    .arr { color: #ADB7BD; }
+
+    .cal-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border: 1px solid #F3F4F6;
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin: 4px 0;
+      box-shadow: 0 4px 14px rgba(0,0,0,.03);
+    }
+
+    .cal-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: #FAFAFA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .cal-info { flex: 1; }
+    .cal-title { font-size: 14px; font-weight: 500; color: #4F4F4F; }
+
+    .cal-meta {
+      font-size: 11px;
+      color: #525866;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 3px;
+    }
+
+    .cal-dot { width: 3px; height: 3px; border-radius: 50%; background: #D9D9D9; }
+
+    /* ── RIGHT PANEL ── */
+    .right-panel {
+      width: 360px;
+      min-width: 360px;
+      border-left: 1px solid #EDEDED;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .rp-tabs {
+      display: flex;
+      border-bottom: 1px solid #EDEDED;
+      padding: 0 16px;
+      position: sticky;
+      top: 64px;
+      background: #fff;
+      z-index: 5;
+    }
+
+    .rp-tab {
+      padding: 10px 14px 12px;
+      font-size: 13px;
+      color: #8D9196;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+
+    .rp-tab.active { font-weight: 500; color: #4F4F4F; border-bottom-color: #4F4F4F; }
+
+    .rp-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px;
+    }
+
+    .rp-section-title { font-size: 15px; font-weight: 500; color: #4F4F4F; margin-bottom: 16px; }
+
+    .record-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .rec-label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      width: 130px;
+      font-size: 11px;
+      color: #53565A;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+
+    .rec-val { font-size: 12px; color: #4F4F4F; font-weight: 500; }
+    .rec-val a { color: #4F4F4F; text-decoration: underline; text-underline-offset: 2px; }
+
+    .rp-divider { height: 1px; background: #F3F4F6; margin: 16px 0; }
+
+    .stars { display: flex; gap: 3px; }
+    .star-filled { color: #F97316; font-size: 13px; }
+    .star-empty  { color: #E4E4E7; font-size: 13px; }
+
+    .dot-status { display: flex; align-items: center; gap: 5px; font-size: 12px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+    .show-all {
+      font-size: 12px;
+      font-weight: 500;
+      color: #4F4F4F;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 16px;
+    }
+
+    /* ── STRIPE LOGO INLINE SVG ── */
+    .stripe-logo { display: inline-flex; align-items: center; justify-content: center; }
+
+    /* ── RESPONSIVE: collapse right panel below 1100px ── */
+    @media (max-width: 1100px) {
+      .right-panel { display: none; }
+    }
+
+    @media (max-width: 780px) {
+      .sidebar { display: none; }
+      .entity-actions .action-btn:not(.primary) { display: none; }
+    }
+  </style>
 </head>
 <body>
+<div class="dash">
 
-<!-- NAV -->
-<div class="nav-wrap">
-  <nav>
-    <a href="#" class="nav-logo">
-      <div class="logo-icon">
-        <svg viewBox="0 0 25 18" fill="none"><rect y="5" width="25" height="13" rx="2" fill="white"/><rect x="3" width="14" height="13" rx="2" fill="white"/><rect x="14" y="9" width="11" height="9" rx="1" fill="white"/></svg>
+  <!-- ════════════════ SIDEBAR ════════════════ -->
+  <aside class="sidebar">
+    <div class="ws-header">
+      <div class="ws-brand">
+        <div class="brand-icon"></div>
+        <span class="ws-name">TradeFlow</span>
+        <span class="ws-chevron">⌄</span>
       </div>
-      <span class="logo-txt">Syntra</span>
-    </a>
-    <ul class="nav-links">
-      <li><a href="#" class="active">Home</a></li>
-      <li><a href="#how">How It Works</a></li>
-      <li><a href="#platform">Platform</a></li>
-      <li><a href="#insights">Insights</a></li>
-    </ul>
-    <div class="nav-right">
-      <a href="#cta" class="nav-cta">
-        Book Meeting
-        <svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6h9M7 2.5l3.5 3.5L7 9.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </div>
-  </nav>
-</div>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-dashed"></div>
-  <div class="hero-text">
-    <h1>Stop Doing Busy Work.<br><em>Start Closing Deals.</em></h1>
-    <p class="hero-sub">Syntra connects your entire revenue team — automating decisions, removing bottlenecks, and helping you move from pipeline to closed-won, faster.</p>
-    <div class="hero-actions">
-      <a href="#cta" class="btn-primary">
-        Get Early Access
-        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5h11M9 3l4.5 4.5L9 12" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a href="#how" class="btn-secondary">See How It Works</a>
-    </div>
-  </div>
-
-  <!-- DASHBOARD BELOW CTAs -->
-  <div class="hero-dash">
-    <div class="hero-fade"></div>
-
-    <!-- Left: Revenue Stats -->
-    <div class="dpanel" style="width:282px">
-      <div class="dlabel">Revenue Performance</div>
-      <div class="dstat">$1.24M</div>
-      <div class="dstat-sub">Pipeline this quarter &nbsp;↑ 34%</div>
-      <div class="dbar-row">
-        <div class="dbar" style="height:30%"></div>
-        <div class="dbar b" style="height:46%"></div>
-        <div class="dbar" style="height:36%"></div>
-        <div class="dbar b" style="height:56%"></div>
-        <div class="dbar a" style="height:74%"></div>
-        <div class="dbar a" style="height:100%"></div>
-      </div>
+      <div class="ws-avatar">AL</div>
     </div>
 
-    <!-- Center: Live Pipeline -->
-    <div class="dpanel" style="width:462px;border-radius:8px 8px 0 0">
-      <div class="dcenter-head">
-        <span class="dcenter-title">Q2 Live Pipeline</span>
-        <span class="dpill">● Live</span>
-      </div>
-      <div class="prow">
-        <div class="pdot" style="background:#3B82F6"></div>
-        <span class="pname">Acme Corp</span>
-        <span class="pbadge s-prop">Proposal</span>
-        <span class="pval">$84,000</span>
-      </div>
-      <div class="prow">
-        <div class="pdot" style="background:#10B981"></div>
-        <span class="pname">Veritas Inc</span>
-        <span class="pbadge s-qual">Qualified</span>
-        <span class="pval">$42,500</span>
-      </div>
-      <div class="prow">
-        <div class="pdot" style="background:var(--accent)"></div>
-        <span class="pname">Stratum AI</span>
-        <span class="pbadge s-new">New Lead</span>
-        <span class="pval">$120,000</span>
-      </div>
-      <div class="prow">
-        <div class="pdot" style="background:rgba(255,255,255,.4)"></div>
-        <span class="pname">Lumex Group</span>
-        <span class="pbadge s-won">Closed ✓</span>
-        <span class="pval">$67,200</span>
-      </div>
-      <div class="prow">
-        <div class="pdot" style="background:#3B82F6"></div>
-        <span class="pname">Datasphere</span>
-        <span class="pbadge s-prop">Proposal</span>
-        <span class="pval">$38,000</span>
-      </div>
+    <div class="search-box">
+      <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="4.5" stroke="#C2C2C2" stroke-width="1.4"/><path d="m10.5 10.5 3 3" stroke="#C2C2C2" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <span>Search anything</span>
+      <span class="kbd">/</span>
     </div>
 
-    <!-- Right: Win Rate -->
-    <div class="dpanel" style="width:282px">
-      <div class="dlabel">Win Rate</div>
-      <div class="win-ring-wrap">
-        <div class="win-ring"><span class="win-ring-val">62%</span></div>
-      </div>
-      <div class="wstat-row"><span class="wstat-l">Deals Won</span><span class="wstat-v pos">+28</span></div>
-      <div class="wstat-row"><span class="wstat-l">Avg Cycle</span><span class="wstat-v">18 days</span></div>
-      <div class="wstat-row"><span class="wstat-l">vs Last Qtr</span><span class="wstat-v pos">↑ 34%</span></div>
-      <div class="wstat-row" style="margin-bottom:14px"><span class="wstat-l">Open Deals</span><span class="wstat-v">47</span></div>
-    </div>
-
-  </div>
-</div>
-
-<!-- BENTO: WHAT CAN SYNTRA HELP WITH -->
-<div id="solutions" class="sect" style="padding-top:0">
-  <div class="sect-inner">
-    <div class="sect-head">
-      <h2>What can <span>Syntra</span> help with?</h2>
-      <p>Revenue teams are under pressure to do more with less. Syntra deploys agentic AI to eliminate friction, unify your stack, and accelerate growth.</p>
-    </div>
-    <div class="bento">
-
-      <!-- 1: Outbound -->
-      <div class="bcell">
-        <div class="accent-bar"></div>
-        <div class="bvis">
-          <div class="bvis-head"><span>Agentic Outbound Sequences</span><div class="vdot"></div></div>
-          <div class="vrows">
-            <div class="vrow"><span class="vrn">Acme Corp → ABM Sequence</span><span class="vbadge b-run">Running</span></div>
-            <div class="vrow"><span class="vrn">Veritas Inc → Intro Email</span><span class="vbadge b-que">Queued</span></div>
-            <div class="vrow"><span class="vrn">Lumex Group → Follow-up</span><span class="vbadge b-don">Done ✓</span></div>
-            <div class="vrow"><span class="vrn">Datasphere → Proposal Draft</span><span class="vbadge b-run">Running</span></div>
-            <div class="vrow"><span class="vrn">Stratum AI → Research</span><span class="vbadge b-que">Queued</span></div>
-          </div>
+    <div class="nav-section">
+      <div class="nav-item">
+        <div class="nav-icon">
+          <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M2 4h12M2 8h8M2 12h5" stroke="#53565A" stroke-width="1.4" stroke-linecap="round"/></svg>
         </div>
-        <span class="btag tag-b">Marketing</span>
-        <div class="btitle">Scale outbound 100x faster</div>
-        <div class="bdesc">1:1 personalized outreach is expensive and slow. Syntra's agentic workflows automate it end-to-end without losing quality or relevance.</div>
-        <a href="#" class="blink">Learn about Agentic Outbound <svg viewBox="0 0 15 15" fill="none"><path d="M2 7.5h11M9 3l4.5 4.5L9 12" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        Notifications
+        <span class="nav-badge">9</span>
       </div>
-
-      <!-- 2: Partner Co-sell -->
-      <div class="bcell">
-        <div class="accent-bar"></div>
-        <div class="bvis">
-          <div class="bvis-head"><span>Partner Network</span><div class="vdot"></div></div>
-          <div class="vnodes">
-            <div class="vnode">👤</div><div class="vconn"></div>
-            <div class="vnode">👤</div><div class="vconn"></div>
-            <div class="vnode main">⚡</div><div class="vconn"></div>
-            <div class="vnode">🤝</div><div class="vconn"></div>
-            <div class="vnode">👤</div>
-          </div>
+      <div class="nav-item">
+        <div class="nav-icon">
+          <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1" stroke="#53565A" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="#53565A" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="#53565A" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="#53565A" stroke-width="1.3"/></svg>
         </div>
-        <span class="btag tag-g">Sales</span>
-        <div class="btitle">Accelerate Partner-led growth</div>
-        <div class="bdesc">Scaling partner-led growth is incredibly difficult. Syntra enables partners to co-sell better with shared context, signals and playbooks.</div>
-        <a href="#" class="blink">Learn about Partner Co-sell <svg viewBox="0 0 15 15" fill="none"><path d="M2 7.5h11M9 3l4.5 4.5L9 12" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        Dashboard
       </div>
-
-      <!-- 3: Revenue Acceleration — FIXED, was empty -->
-      <div class="bcell">
-        <div class="accent-bar"></div>
-        <div class="bvis">
-          <div class="bvis-head"><span>Deal Pipeline · Sellers View</span><div class="vdot"></div></div>
-          <div class="vtable">
-            <div class="vtable-head"><span>Account</span><span>Stage</span><span style="text-align:right">Value</span></div>
-            <div class="vtable-row"><span class="vcn">Acme Corp</span><span class="vcb s-prop">Proposal</span><span class="vcv">$84k</span></div>
-            <div class="vtable-row"><span class="vcn">Stratum AI</span><span class="vcb s-new">New</span><span class="vcv">$120k</span></div>
-            <div class="vtable-row"><span class="vcn">Lumex Group</span><span class="vcb b-don">Won ✓</span><span class="vcv">$67k</span></div>
-            <div class="vtable-row"><span class="vcn">Datasphere</span><span class="vcb s-qual">Qualified</span><span class="vcv">$38k</span></div>
-          </div>
-          <div class="vbars" style="height:48px">
-            <div class="vb c" style="height:40%"></div>
-            <div class="vb c" style="height:55%"></div>
-            <div class="vb b" style="height:65%"></div>
-            <div class="vb b" style="height:78%"></div>
-            <div class="vb a" style="height:90%"></div>
-            <div class="vb a" style="height:100%"></div>
-          </div>
+      <div class="nav-item">
+        <div class="nav-icon">
+          <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" stroke="#53565A" stroke-width="1.3"/></svg>
         </div>
-        <span class="btag tag-g">Sales</span>
-        <div class="btitle">Accelerate revenue for sellers</div>
-        <div class="bdesc">Empower reps to build high-converting pipeline at scale and compress deal cycles with AI-guided playbooks at every stage.</div>
-        <a href="#" class="blink">Learn about Revenue Acceleration <svg viewBox="0 0 15 15" fill="none"><path d="M2 7.5h11M9 3l4.5 4.5L9 12" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        Assigned to me
       </div>
-
-      <!-- 4: Event Marketing -->
-      <div class="bcell">
-        <div class="accent-bar"></div>
-        <div class="bvis">
-          <div class="bvis-head"><span>Event Pipeline Tracker</span><div class="vdot"></div></div>
-          <div class="vrows">
-            <div class="vrow"><span class="vrn">SaaStr Annual — Leads Captured</span><span class="vbadge b-don">248 ✓</span></div>
-            <div class="vrow"><span class="vrn">Dreamforce — Follow-up Seq.</span><span class="vbadge b-run">Running</span></div>
-            <div class="vrow"><span class="vrn">Web Summit — Nurture Flow</span><span class="vbadge b-run">Running</span></div>
-            <div class="vrow"><span class="vrn">Collision — Pre-event Outreach</span><span class="vbadge b-que">Queued</span></div>
-            <div class="vrow"><span class="vrn">Inbound — Speaker Follow-up</span><span class="vbadge b-don">Done ✓</span></div>
-          </div>
+      <div class="nav-item">
+        <div class="nav-icon">
+          <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M8 2.5 9.8 6.2l4.2.6-3 3 .7 4.2L8 12l-3.7 1.9.7-4.2-3-3 4.2-.6z" stroke="#53565A" stroke-width="1.3"/></svg>
         </div>
-        <span class="btag tag-b">Marketing</span>
-        <div class="btitle">Double pipeline from events</div>
-        <div class="bdesc">Traditional event marketing is slow and manual. Syntra 2x your event RoI with automated follow-up, sequencing and conversion — in days.</div>
-        <a href="#" class="blink">Learn about Event Marketing <svg viewBox="0 0 15 15" fill="none"><path d="M2 7.5h11M9 3l4.5 4.5L9 12" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        Task
       </div>
-
-    </div>
-  </div>
-</div>
-
-<!-- HOW IT WORKS -->
-<div id="how" class="how-sect">
-  <div class="how-inner">
-    <div class="how-head">
-      <h2>What is a <span>Revenue OS?</span></h2>
-      <p>In simple terms — an AI platform that runs your entire revenue engine, not just one part of it.</p>
-      <p>Much like an OS enables apps on your phone, Syntra uses state-of-the-art AI agents to run your Sales &amp; Marketing workflows continuously. Syntra consists of 3 foundational building blocks:</p>
-    </div>
-    <div class="how-cards">
-      <div class="hcard">
-        <div class="hicon"><div class="hicon-dot"></div></div>
-        <div class="accent-bar" style="position:absolute;left:0;top:90px"></div>
-        <div class="htitle">Experiences</div>
-        <div class="hdesc">Deliver 1:1 personalized engagement across any channel — email, LinkedIn, web, or mobile — with pixel-perfect brand compliance at scale.</div>
+      <div class="nav-item">
+        <div class="nav-icon">
+          <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M3 3h10v10H3z" stroke="#53565A" stroke-width="1.3" rx="1"/></svg>
+        </div>
+        Projects
       </div>
-      <div class="hcard">
-        <div class="hicon"><div class="hicon-dot"></div></div>
-        <div class="accent-bar" style="position:absolute;left:0;top:90px"></div>
-        <div class="htitle">Intelligence</div>
-        <div class="hdesc">Deploy AI agents with state-of-the-art models and compose them into workflows with human-in-the-loop automation at every critical decision point.</div>
+      <div class="nav-item">
+        <div class="nav-icon">
+          <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v8H3zM6 4V2M10 4V2" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </div>
+        Schedule
       </div>
-      <div class="hcard">
-        <div class="hicon"><div class="hicon-dot"></div></div>
-        <div class="accent-bar" style="position:absolute;left:0;top:90px"></div>
-        <div class="htitle">Data</div>
-        <div class="hdesc">Integrate structured and unstructured data into a tiered revenue data lake with strict access controls and governance policies built in.</div>
+      <div class="nav-item">
+        <div class="nav-icon">
+          <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><circle cx="5.5" cy="5" r="2.5" stroke="#53565A" stroke-width="1.3"/><path d="M1 14c0-2.5 2-4.5 4.5-4.5S10 11.5 10 14" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/><circle cx="11" cy="5" r="2" stroke="#53565A" stroke-width="1.2" opacity=".6"/><path d="M13 14c0-1.8-1-3.2-2.5-3.8" stroke="#53565A" stroke-width="1.2" stroke-linecap="round" opacity=".6"/></svg>
+        </div>
+        Customers
+      </div>
+      <div class="nav-item active">
+        <div class="nav-icon">
+          <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M2 3h4v4H2zM10 3h4v4h-4zM2 9h4v4H2zM10 9h4v4h-4z" stroke="#4F4F4F" stroke-width="1.3"/></svg>
+        </div>
+        Companies
       </div>
     </div>
-    <p class="how-footer">Nova, your AI assistant powered by Syntra, is available in Slack, Google Slides, Sheets and Email. Nova leverages a team of AI agents and workflows to assist your revenue team with every task.</p>
-  </div>
-</div>
 
-<!-- COMPARE -->
-<div id="platform" class="cmp-sect">
-  <div class="cmp-inner">
-    <h2 class="cmp-title">Syntra vs. legacy GTM<br>stack vs. AI apps</h2>
-    <div class="cmp-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th style="text-align:left">What</th>
-            <th>Legacy GTM</th>
-            <th>Point AI</th>
-            <th>Syntra</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Time to results</td><td>Slow</td><td>Fast</td><td>Fast</td></tr>
-          <tr><td>Learning curve</td><td>High</td><td>Low</td><td>Low</td></tr>
-          <tr><td>Cross-team sync</td><td>No</td><td>No</td><td>Yes</td></tr>
-          <tr><td>Cost of ownership</td><td>High</td><td>High</td><td>Low</td></tr>
-          <tr><td>Works as a system</td><td>No</td><td>No</td><td>Yes</td></tr>
-        </tbody>
-      </table>
+    <div class="divider"></div>
+    <span class="ws-label">Workspace ⌄</span>
+
+    <div class="nav-item">
+      <div class="nav-icon"><svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M4 8h5M4 5h8M4 11h3" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+      Attachment
     </div>
-  </div>
-</div>
+    <div class="nav-item">
+      <div class="nav-icon"><svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M3 2h7l3 3v9H3z" stroke="#53565A" stroke-width="1.3"/><path d="M10 2v4h4" stroke="#53565A" stroke-width="1.3"/></svg></div>
+      Documents
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon"><svg width="14" height="14" fill="none" viewBox="0 0 16 16"><rect x="2" y="4" width="12" height="9" rx="1" stroke="#53565A" stroke-width="1.3"/><path d="M5 4V3M11 4V3M2 8h12" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+      Emails
+    </div>
 
-<!-- FAQ -->
-<div id="insights" class="faq-sect">
-  <div class="faq-inner">
-    <div><h2 class="faq-h">Frequently Asked Questions</h2></div>
-    <div class="faq-list">
+    <div class="nav-footer">
+      <div class="divider"></div>
+      <div class="nav-item">
+        <div class="nav-icon"><svg width="14" height="14" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke="#53565A" stroke-width="1.3"/><path d="M8 6v2M8 10v.5" stroke="#53565A" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        Help center
+        <svg style="margin-left:auto;color:#8D9196" width="10" height="10" fill="none" viewBox="0 0 12 12"><path d="M3 9 9 3M5 3h4v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon"><svg width="14" height="14" fill="none" viewBox="0 0 16 16"><rect x="1" y="4" width="14" height="9" rx="1" stroke="#53565A" stroke-width="1.3"/><path d="M1 7h14" stroke="#53565A" stroke-width="1.3"/><circle cx="12" cy="11" r="1" fill="#53565A"/></svg></div>
+        Billing
+      </div>
+    </div>
+  </aside>
 
-      <div class="faq-item open" onclick="toggleFaq(this)">
-        <div class="faq-q"><span>What are the main use cases for Syntra?</span><span class="farr"><svg viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="#6C47FF" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-        <div class="faq-a">
-          <p>There are several revenue use cases. We recommend starting with one to maximize your RoI in the first 90 days:</p>
-          <ul><li>Agentic Outbound &amp; ABM</li><li>Partner Co-sell Acceleration</li><li>Revenue Acceleration for Sellers</li><li>Event Pipeline Automation</li></ul>
+  <!-- ════════════════ MAIN ════════════════ -->
+  <main class="main">
+
+    <!-- Top bar -->
+    <header class="topbar">
+      <div class="breadcrumb">
+        <div class="bc-item">
+          <svg width="13" height="13" fill="none" viewBox="0 0 16 16"><path d="M2 3h4v4H2zM10 3h4v4h-4zM2 9h4v4H2zM10 9h4v4h-4z" stroke="#53565A" stroke-width="1.3"/></svg>
+          Companies
+        </div>
+        <span class="bc-sep">»</span>
+        <div class="bc-current">
+          <!-- Stripe logo -->
+          <svg width="14" height="14" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#635BFF"/><path d="M13.4 11.6c0-1.1.9-1.5 2.3-1.5 2.1 0 4.7.6 6.8 1.8V6.2C20.3 5.4 18 5 15.7 5 10 5 6.2 8 6.2 11.9c0 6.2 8.5 5.2 8.5 7.9 0 1.3-1.1 1.7-2.6 1.7-2.2 0-5.1-.9-7.4-2.2V25c2.5 1.1 5.1 1.5 7.4 1.5 5.8 0 9.9-2.9 9.9-6.9-.1-6.7-8.6-5.5-8.6-8z" fill="#fff"/></svg>
+          Stripe
         </div>
       </div>
-
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q"><span>What does the name "Syntra" mean?</span><span class="farr"><svg viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="#6C47FF" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-        <div class="faq-a">Syntra combines "synthesis" and "traction" — reflecting our mission to synthesize your revenue data, workflows and team into one unified system that drives real results.</div>
+      <div class="topbar-right">
+        <span class="update-text">Last update 3 days ago</span>
+        <div class="avatars">
+          <div class="av" style="background:#C0D5FF;color:#3b5bdb">AL</div>
+          <div class="av" style="background:#D3F9D8;color:#2f9e44">MK</div>
+          <div class="av" style="background:#FFD8A8;color:#d9480f">RJ</div>
+          <div class="av" style="background:#F3D9FA;color:#7950f2">SP</div>
+        </div>
+        <button class="share-btn">
+          <svg width="13" height="13" fill="none" viewBox="0 0 16 16"><path d="M5 8h8M9 4l4 4-4 4" stroke="#53565A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Share
+        </button>
       </div>
+    </header>
 
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q"><span>Why do you call it an operating system?</span><span class="farr"><svg viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="#6C47FF" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-        <div class="faq-a">Just like your phone's OS coordinates apps, memory and hardware — Syntra coordinates your agents, data and workflows. Point AI tools are just apps. Syntra is the OS beneath them.</div>
+    <!-- Entity bar -->
+    <div class="entity-bar">
+      <div class="entity-left">
+        <svg width="22" height="22" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#635BFF"/><path d="M13.4 11.6c0-1.1.9-1.5 2.3-1.5 2.1 0 4.7.6 6.8 1.8V6.2C20.3 5.4 18 5 15.7 5 10 5 6.2 8 6.2 11.9c0 6.2 8.5 5.2 8.5 7.9 0 1.3-1.1 1.7-2.6 1.7-2.2 0-5.1-.9-7.4-2.2V25c2.5 1.1 5.1 1.5 7.4 1.5 5.8 0 9.9-2.9 9.9-6.9-.1-6.7-8.6-5.5-8.6-8z" fill="#fff"/></svg>
+        <span class="entity-name">Stripe</span>
+        <span class="entity-star">☆</span>
       </div>
-
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q"><span>What is your pricing model?</span><span class="farr"><svg viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="#6C47FF" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-        <div class="faq-a">Outcome-based pricing tied to pipeline generated and deals closed — not seat licenses. Contact us to get a custom quote tailored to your team size and use case.</div>
+      <div class="entity-actions">
+        <button class="action-btn">
+          <svg width="13" height="13" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v8H3z" stroke="#53565A" stroke-width="1.3" rx="1"/><path d="M6 7h4M6 10h2" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg>
+          Add to list
+        </button>
+        <button class="action-btn">
+          <svg width="13" height="13" fill="none" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10" stroke="#53565A" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Run workflow
+          <svg width="9" height="9" fill="none" viewBox="0 0 12 12"><path d="M2 6h7M5 3l4 3-4 3" stroke="#53565A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="action-btn primary">
+          <svg width="13" height="13" fill="none" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Compose email
+        </button>
       </div>
-
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q"><span>How are you different from other AI GTM vendors?</span><span class="farr"><svg viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="#6C47FF" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-        <div class="faq-a">Most AI GTM tools automate one thing — a single email, a single channel. Syntra coordinates agents, data and workflows across your entire revenue motion. It's the difference between a single app and an operating system.</div>
-      </div>
-
     </div>
-  </div>
+
+    <!-- Tabs -->
+    <nav class="tabs-bar">
+      <div class="tab active">
+        <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M2 12 6 5l3 4 2.5-3L14 12" stroke="#4F4F4F" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        Activity <span class="tab-count">143</span>
+      </div>
+      <div class="tab">
+        <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1" stroke="#8D9196" stroke-width="1.3"/></svg>
+        Emails
+      </div>
+      <div class="tab">
+        <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v8H3z" stroke="#8D9196" stroke-width="1.3" rx="1"/></svg>
+        Notes <span class="tab-count">12</span>
+      </div>
+      <div class="tab">
+        <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v8H3z" stroke="#8D9196" stroke-width="1.3" rx="1"/><path d="M6 7h4" stroke="#8D9196" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Tasks <span class="tab-count">3</span>
+      </div>
+      <div class="tab">
+        <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 2h7l3 3v9H3z" stroke="#8D9196" stroke-width="1.3"/></svg>
+        Files <span class="tab-count">4</span>
+      </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="content-area">
+
+      <!-- Feed -->
+      <div class="feed">
+        <div class="feed-header">
+          <span class="feed-title">Activity</span>
+          <div class="feed-controls">
+            <button class="ctrl-btn">
+              <svg width="11" height="11" fill="none" viewBox="0 0 14 14"><path d="M1 3h12M3 7h8M5 11h4" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg>
+              Filters
+            </button>
+            <button class="ctrl-btn">
+              <svg width="11" height="11" fill="none" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5" stroke="#53565A" stroke-width="1.3"/><path d="M5 7h2v3" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg>
+              Manage access
+            </button>
+          </div>
+        </div>
+
+        <div class="year-divider"><span class="yr-label">2025</span><div class="yr-line"></div></div>
+
+        <!-- Activity 1 — expanded -->
+        <div class="activity-item">
+          <div class="act-icon-wrap">
+            <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1" stroke="#53565A" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="#53565A" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="#53565A" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="#53565A" stroke-width="1.3"/></svg>
+          </div>
+          <div class="act-body">
+            <div class="act-line">
+              <div class="act-avatar" style="background:#C0D5FF;color:#3b5bdb">AL</div>
+              <span class="act-text">Alex Liu changed Stage and 7 other attributes in</span>
+              <span class="pill pill-gray">📌 Sales</span>
+              <span class="act-time">12 minutes ago</span>
+            </div>
+            <div class="act-changes">
+              <div class="change-row">
+                <span class="change-key">Stage</span><span class="arr">→</span>
+                <span class="dot-status"><span class="dot" style="background:#F97316"></span><span style="color:#F97316;font-size:11px;font-weight:500">Meeting</span></span>
+              </div>
+              <div class="change-row">
+                <span class="change-key">Priority</span><span class="arr">→</span>
+                <span class="pill pill-sky">Medium</span>
+              </div>
+              <div class="change-row">
+                <span class="change-key">Contract</span><span class="arr">→</span>
+                <span style="font-size:11px;font-weight:500;color:#4F4F4F">$240,000</span>
+              </div>
+              <div class="change-row">
+                <span class="change-key">Close date</span><span class="arr">→</span>
+                <span style="font-size:11px;font-weight:500;color:#4F4F4F">Oct 29, 2025</span>
+              </div>
+              <div class="change-row">
+                <span class="change-key">Close confidence</span><span class="arr">→</span>
+                <div class="stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">★</span></div>
+              </div>
+              <div class="change-row">
+                <span class="change-key">Close-lost reason</span><span class="arr">→</span>
+                <span style="font-size:11px;color:#4F4F4F">Client refused to schedule a call</span>
+              </div>
+              <div class="change-row">
+                <span class="change-key">Notes</span><span class="arr">→</span>
+                <span style="font-size:11px;color:#4F4F4F">Always ask for email in the first interaction</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity 2 -->
+        <div class="activity-item">
+          <div class="act-icon-wrap">
+            <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v9H3z" stroke="#53565A" stroke-width="1.3" rx="1"/><path d="M6 4V2M10 4V2" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+          <div class="act-body">
+            <div class="act-line">
+              <div class="act-avatar" style="background:#D3F9D8;color:#2f9e44">MK</div>
+              <span class="act-text">Maya Kim added Stripe to</span>
+              <span class="pill pill-gray">📌 Sales</span>
+              <span class="act-time">3 days ago</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity 3 -->
+        <div class="activity-item">
+          <div class="act-icon-wrap">
+            <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke="#53565A" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+          <div class="act-body">
+            <div class="act-line">
+              <div class="act-avatar" style="background:#FFD8A8;color:#d9480f">RJ</div>
+              <span class="act-text">Raj Joshi added the status to</span>
+              <span class="pill pill-rose">✦ Negotiation</span>
+              <span class="act-time">4 days ago</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity 4 -->
+        <div class="activity-item">
+          <div class="act-icon-wrap">
+            <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M4 8l4-4 4 4M8 4v8" stroke="#53565A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="act-body">
+            <div class="act-line">
+              <svg width="14" height="14" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#635BFF"/><path d="M13.4 11.6c0-1.1.9-1.5 2.3-1.5 2.1 0 4.7.6 6.8 1.8V6.2C20.3 5.4 18 5 15.7 5 10 5 6.2 8 6.2 11.9c0 6.2 8.5 5.2 8.5 7.9 0 1.3-1.1 1.7-2.6 1.7-2.2 0-5.1-.9-7.4-2.2V25c2.5 1.1 5.1 1.5 7.4 1.5 5.8 0 9.9-2.9 9.9-6.9-.1-6.7-8.6-5.5-8.6-8z" fill="#fff"/></svg>
+              <span class="act-text">stripe.com was added to domains</span>
+              <span class="act-time">about 30 days ago</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity 5 -->
+        <div class="activity-item">
+          <div class="act-icon-wrap">
+            <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v8H3z" stroke="#53565A" stroke-width="1.3" rx="1"/><path d="M6 7h4M6 10h2" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+          <div class="act-body">
+            <div class="act-line">
+              <svg width="14" height="14" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#635BFF"/><path d="M13.4 11.6c0-1.1.9-1.5 2.3-1.5 2.1 0 4.7.6 6.8 1.8V6.2C20.3 5.4 18 5 15.7 5 10 5 6.2 8 6.2 11.9c0 6.2 8.5 5.2 8.5 7.9 0 1.3-1.1 1.7-2.6 1.7-2.2 0-5.1-.9-7.4-2.2V25c2.5 1.1 5.1 1.5 7.4 1.5 5.8 0 9.9-2.9 9.9-6.9-.1-6.7-8.6-5.5-8.6-8z" fill="#fff"/></svg>
+              <span class="act-text">Description added</span>
+              <span class="act-time">about 30 days ago</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="year-divider" style="margin-top:8px"><span class="yr-label" style="color:#A1A1AA">2024</span><div class="yr-line"></div></div>
+
+        <!-- Calendar card -->
+        <div class="activity-item" style="padding-left:58px">
+          <div class="cal-card" style="flex:1">
+            <div class="cal-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" fill="#4285F4" opacity=".12"/><rect x="3" y="5" width="18" height="16" rx="2" stroke="#4285F4" stroke-width="1.4"/><path d="M3 10h18" stroke="#4285F4" stroke-width="1.2"/><path d="M8 3v4M16 3v4" stroke="#4285F4" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="15" r="1" fill="#4285F4"/><circle cx="12" cy="15" r="1" fill="#4285F4"/></svg>
+            </div>
+            <div class="cal-info">
+              <div class="cal-title">Weekly team catchup</div>
+              <div class="cal-meta">
+                <span>May 23</span><span class="cal-dot"></span><span>12:00 PM – 01:00 PM</span>
+              </div>
+            </div>
+            <span style="color:#4F4F4F;font-size:14px;cursor:pointer">↗</span>
+          </div>
+        </div>
+
+        <!-- Activity 6 -->
+        <div class="activity-item">
+          <div class="act-icon-wrap">
+            <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="5" cy="5" r="2.5" stroke="#53565A" stroke-width="1.3"/><circle cx="11" cy="11" r="2.5" stroke="#53565A" stroke-width="1.3"/><path d="M7 5h4M5 11h-2" stroke="#53565A" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="act-body">
+            <div class="act-line">
+              <div class="act-avatar" style="background:#F3D9FA;color:#7950f2">SP</div>
+              <span class="act-text">Sofia Park added the employer range to</span>
+              <span class="pill pill-green">1K–5K</span>
+              <span class="act-time">about 1 year ago</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity 7 -->
+        <div class="activity-item">
+          <div class="act-icon-wrap">
+            <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="10" rx="1" stroke="#53565A" stroke-width="1.3"/><path d="M1 7h14" stroke="#53565A" stroke-width="1.2"/></svg>
+          </div>
+          <div class="act-body">
+            <div class="act-line">
+              <svg width="14" height="14" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#635BFF"/><path d="M13.4 11.6c0-1.1.9-1.5 2.3-1.5 2.1 0 4.7.6 6.8 1.8V6.2C20.3 5.4 18 5 15.7 5 10 5 6.2 8 6.2 11.9c0 6.2 8.5 5.2 8.5 7.9 0 1.3-1.1 1.7-2.6 1.7-2.2 0-5.1-.9-7.4-2.2V25c2.5 1.1 5.1 1.5 7.4 1.5 5.8 0 9.9-2.9 9.9-6.9-.1-6.7-8.6-5.5-8.6-8z" fill="#fff"/></svg>
+              <span class="act-text">Stripe was added</span>
+              <span class="act-time">about 1 year ago</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /feed -->
+
+      <!-- ════════════════ RIGHT PANEL ════════════════ -->
+      <aside class="right-panel">
+        <div class="rp-tabs">
+          <div class="rp-tab active">Details</div>
+          <div class="rp-tab">Comments <span style="font-size:10px;opacity:.6">12</span></div>
+        </div>
+        <div class="rp-body">
+          <div class="rp-section-title">Record details</div>
+
+          <div class="record-row">
+            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#53565A" stroke-width="1.3"/></svg> Company</div>
+            <div class="rec-val" style="display:flex;align-items:center;gap:5px">
+              <svg width="14" height="14" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#635BFF"/><path d="M13.4 11.6c0-1.1.9-1.5 2.3-1.5 2.1 0 4.7.6 6.8 1.8V6.2C20.3 5.4 18 5 15.7 5 10 5 6.2 8 6.2 11.9c0 6.2 8.5 5.2 8.5 7.9 0 1.3-1.1 1.7-2.6 1.7-2.2 0-5.1-.9-7.4-2.2V25c2.5 1.1 5.1 1.5 7.4 1.5 5.8 0 9.9-2.9 9.9-6.9-.1-6.7-8.6-5.5-8.6-8z" fill="#fff"/></svg>
+              Stripe
+            </div>
+          </div>
+
+          <div class="record-row">
+            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M5 8h5M5 5h8M5 11h3" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg> Domains</div>
+            <div class="rec-val"><a href="#">stripe.com ↗</a></div>
+          </div>
+
+          <div class="record-row">
+            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke="#53565A" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg> Status</div>
+            <div class="rec-val"><span class="pill pill-rose">✦ Negotiation</span></div>
+          </div>
+
+          <div class="record-row">
+            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v8H3z" stroke="#53565A" stroke-width="1.3" rx="1"/></svg> Description</div>
+            <div class="rec-val" style="font-weight:400;font-size:11px;color:#53565A;max-width:170px;line-height:1.5">Global payment infrastructure platform for internet businesses</div>
+          </div>
+
+          <div class="record-row">
+            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="5" r="2.5" stroke="#53565A" stroke-width="1.3"/><path d="M3 14c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg> Person to contact</div>
+            <div class="rec-val" style="display:flex;align-items:center;gap:5px">
+              <div style="width:16px;height:16px;border-radius:50%;background:#C0D5FF;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:600;color:#3b5bdb">AL</div>
+              Alex Liu
+            </div>
+          </div>
+
+          <div class="record-row">
+            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M2 12 6 5l3 4 2.5-3L14 12" stroke="#53565A" stroke-width="1.3" stroke-linejoin="round"/></svg> Categories</div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap">
+              <span class="pill pill-orange">B2B</span>
+              <span class="pill pill-indigo">B2C</span>
+              <span class="pill pill-sky">Payments</span>
+            </div>
+          </div>
+
+          <div class="record-row">
+            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="5" cy="5" r="2.5" stroke="#53565A" stroke-width="1.3"/><circle cx="11" cy="11" r="2.5" stroke="#53565A" stroke-width="1.3"/></svg> Employer range</div>
+            <div class="rec-val"><span class="pill pill-green">1K–5K</span></div>
+          </div>
+
+          <div class="show-all">Show all values <svg width="10" height="10" fill="none" viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" stroke="#4F4F4F" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+
+          <div class="rp-divider"></div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <span class="rp-section-title" style="margin:0">Lists</span>
+            <span style="font-size:11px;color:#4F4F4F;text-decoration:underline;text-underline-offset:2px;cursor:pointer;display:flex;align-items:center;gap:3px;font-weight:500">
+              Go to lists
+              <svg width="9" height="9" fill="none" viewBox="0 0 12 12"><path d="M2 10L10 2M5 2h5v5" stroke="#4F4F4F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+
+          <div class="record-row">
+            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v8H3z" stroke="#53565A" stroke-width="1.3" rx="1"/></svg> List name</div>
+            <div class="rec-val"><span class="pill pill-gray">📌 Sales</span></div>
+          </div>
+          <div class="record-row">
+            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#53565A" stroke-width="1.3"/></svg> Stage</div>
+            <div class="rec-val">
+              <span class="dot-status"><span class="dot" style="background:#F97316"></span><span style="color:#F97316;font-weight:500">Meeting</span></span>
+            </div>
+          </div>
+          <div class="record-row">
+            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M4 8h5M4 5h8" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg> Priority</div>
+            <div class="rec-val"><span class="pill pill-sky">Medium</span></div>
+          </div>
+          <div class="record-row">
+            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="5" r="2.5" stroke="#53565A" stroke-width="1.3"/></svg> Owner</div>
+            <div class="rec-val" style="display:flex;align-items:center;gap:5px">
+              <div style="width:16px;height:16px;border-radius:50%;background:#C0D5FF;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:600;color:#3b5bdb">AL</div>
+              Alex Liu
+            </div>
+          </div>
+          <div class="record-row">
+            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1" stroke="#53565A" stroke-width="1.3"/><path d="M5 8h6M5 11h3" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg> Contract</div>
+            <div class="rec-val">$240,000</div>
+          </div>
+          <div class="record-row">
+            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="11" rx="1" stroke="#53565A" stroke-width="1.3"/><path d="M5 2v2M11 2v2M2 8h12" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg> Close date</div>
+            <div class="rec-val">Oct 29, 2025</div>
+          </div>
+          <div class="record-row">
+            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M8 2l1.5 3 3.5.5-2.5 2.5.5 3.5L8 10l-3.5 1.9.5-3.5L2.5 5.5l3.5-.5z" stroke="#53565A" stroke-width="1.3"/></svg> Close confidence</div>
+            <div class="stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">★</span></div>
+          </div>
+          <div class="record-row">
+            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 8h10M3 5h10M3 11h5" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg> Close-lost reason</div>
+            <div class="rec-val" style="font-weight:400;color:#A1A1AA;font-size:11px">Set close-lost reason here...</div>
+          </div>
+          <div class="record-row">
+            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v8H3z" stroke="#53565A" stroke-width="1.3" rx="1"/><path d="M5 8h6M5 11h3" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg> Notes</div>
+            <div class="rec-val" style="font-weight:400;color:#A1A1AA;font-size:11px">Set notes here...</div>
+          </div>
+
+        </div>
+      </aside>
+
+    </div><!-- /content-area -->
+  </main>
 </div>
-
-<!-- CTA -->
-<div id="cta" class="cta-sect">
-  <div class="cta-grid"></div>
-  <div class="cta-inner">
-    <h2>Your competitors are already automating.<br>Are you?</h2>
-    <p>Syntra is in private beta. A limited number of revenue teams get access this quarter. Apply now and start closing more, faster.</p>
-    <a href="#" class="btn-primary">
-      Apply for Early Access
-      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5h11M9 3l4.5 4.5L9 12" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
-  </div>
-</div>
-
-<!-- FOOTER -->
-<footer>
-  <div class="foot-inner">
-    <div class="foot-top">
-      <div class="foot-brand">
-        <a href="#" class="foot-logo">
-          <div class="logo-icon"><svg viewBox="0 0 25 18" fill="none"><rect y="5" width="25" height="13" rx="2" fill="white"/><rect x="3" width="14" height="13" rx="2" fill="white"/><rect x="14" y="9" width="11" height="9" rx="1" fill="white"/></svg></div>
-          <span class="logo-txt">Syntra</span>
-        </a>
-        <p class="foot-desc">Syntra is the revenue operating system built to efficiently accelerate growth. Enable sellers, generate pipeline and personalize customer engagement at scale — in minutes.</p>
-        <nav class="foot-nav">
-          <a href="#">Home</a>
-          <a href="#">Use Cases</a>
-          <a href="#">Platform</a>
-          <a href="#">Insights</a>
-          <a href="#">Book Meeting</a>
-        </nav>
-      </div>
-      <div class="foot-socials">
-        <a href="#" class="soc" title="LinkedIn">
-          <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        </a>
-        <a href="#" class="soc" title="X">
-          <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        </a>
-      </div>
-    </div>
-    <div class="foot-div"></div>
-    <div class="foot-bot">
-      <p class="foot-copy">Copyright © 2026 Syntra, Inc. All rights reserved.</p>
-      <div class="foot-legal"><a href="#">Terms of Use</a><a href="#">Privacy Policy</a></div>
-    </div>
-  </div>
-</footer>
-
-<script>
-function toggleFaq(el){
-  document.querySelectorAll('.faq-item').forEach(i=>{ if(i!==el) i.classList.remove('open') });
-  el.classList.toggle('open');
-}
-</script>
 </body>
 </html>
