@@ -1,1045 +1,732 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TradeFlow — Companies</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html, body {
-      width: 100%;
-      min-height: 100vh;
-      background: #F2F2F2;
-      font-family: 'Onest', sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    .dash {
-      display: flex;
-      width: 100%;
-      min-height: 100vh;
-      background: #F2F2F2;
-    }
-
-    /* ── SIDEBAR ── */
-    .sidebar {
-      width: 260px;
-      min-width: 260px;
-      background: #FAFAFA;
-      border-right: 1px solid #E8E8E8;
-      display: flex;
-      flex-direction: column;
-      padding: 12px 16px 0;
-      gap: 6px;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow-y: auto;
-    }
-
-    .ws-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 2px 0 8px;
-    }
-
-    .ws-brand {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .brand-icon {
-      width: 22px;
-      height: 22px;
-      border-radius: 5px;
-      background: linear-gradient(111deg, #69BFF9 11%, #B96AF3 42%, #E9685E 61%, #F2AC3E 98%);
-      box-shadow: 0 1px 3px rgba(8,8,8,.18), inset 0 1px 1px rgba(255,255,255,.2);
-      flex-shrink: 0;
-    }
-
-    .ws-name {
-      font-size: 15px;
-      font-weight: 600;
-      color: #4F4F4F;
-      letter-spacing: -0.5px;
-    }
-
-    .ws-chevron { color: #8D9196; font-size: 10px; }
-
-    .ws-avatar {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #C0D5FF;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 8px;
-      font-weight: 600;
-      color: #3b5bdb;
-    }
-
-    .search-box {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: #fff;
-      border: 1px solid #EDEDED;
-      box-shadow: 0 1px 12px rgba(0,0,0,.02);
-      border-radius: 8px;
-      padding: 7px 8px;
-      font-size: 11px;
-      color: #C2C2C2;
-    }
-
-    .search-box span { flex: 1; }
-
-    .kbd {
-      background: #F0F0F0;
-      border-radius: 4px;
-      padding: 1px 5px;
-      font-size: 10px;
-      color: #4F4F4F;
-    }
-
-    .nav-section {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      flex: 1;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 10px;
-      border-radius: 8px;
-      font-size: 13px;
-      color: #53565A;
-      cursor: pointer;
-      transition: background 0.12s;
-    }
-
-    .nav-item:hover { background: #F0F0F0; }
-    .nav-item.active { background: #F0F0F0; color: #4F4F4F; font-weight: 500; }
-
-    .nav-icon {
-      width: 16px;
-      height: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      color: #53565A;
-    }
-
-    .nav-badge {
-      margin-left: auto;
-      background: #F43F5E;
-      border-radius: 50%;
-      width: 17px;
-      height: 17px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 9px;
-      color: #fff;
-      font-weight: 600;
-    }
-
-    .ws-label {
-      font-size: 11px;
-      color: #53565A;
-      padding: 2px 4px;
-      letter-spacing: 0.2px;
-    }
-
-    .divider { height: 1px; background: #E6E6E6; margin: 4px -4px; }
-
-    .nav-footer {
-      padding: 8px 0 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    /* ── MAIN ── */
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      background: #fff;
-      min-width: 0;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      height: 64px;
-      border-bottom: 1px solid #EDEDED;
-      background: #fff;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 14px;
-    }
-
-    .bc-item, .bc-current {
-      color: #53565A;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .bc-sep { color: #ADB7BD; font-size: 10px; }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .update-text { font-size: 12px; color: #52525B; }
-
-    .avatars { display: flex; }
-
-    .av {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      border: 2px solid #fff;
-      margin-right: -5px;
-      font-size: 7px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .share-btn {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 6px 14px;
-      border-radius: 8px;
-      background: #F2F2F2;
-      font-size: 13px;
-      font-weight: 500;
-      color: #53565A;
-      cursor: pointer;
-      border: none;
-    }
-
-    .entity-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      height: 54px;
-      border-bottom: 1px solid #EDEDED;
-    }
-
-    .entity-left { display: flex; align-items: center; gap: 8px; }
-
-    .entity-name {
-      font-size: 17px;
-      font-weight: 600;
-      color: #4F4F4F;
-      letter-spacing: -0.4px;
-    }
-
-    .entity-star { color: #8D9196; font-size: 14px; cursor: pointer; }
-
-    .entity-actions { display: flex; align-items: center; gap: 8px; }
-
-    .action-btn {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 6px 12px;
-      border-radius: 8px;
-      background: #fff;
-      border: 1px solid #EDEDED;
-      font-size: 12px;
-      font-weight: 500;
-      color: #53565A;
-      cursor: pointer;
-      font-family: 'Onest', sans-serif;
-      transition: background 0.1s;
-    }
-
-    .action-btn:hover { background: #FAFAFA; }
-    .action-btn.primary { background: #1A1A1A; color: #fff; border-color: #1A1A1A; }
-    .action-btn.primary:hover { background: #2d2d2d; }
-
-    .tabs-bar {
-      display: flex;
-      align-items: flex-end;
-      padding: 0 24px;
-      border-bottom: 1px solid #EDEDED;
-    }
-
-    .tab {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 10px 14px 12px;
-      font-size: 13px;
-      color: #8D9196;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: color 0.1s;
-    }
-
-    .tab:hover { color: #53565A; }
-    .tab.active { color: #4F4F4F; font-weight: 500; border-bottom-color: #4F4F4F; }
-    .tab-count { font-size: 11px; opacity: 0.7; }
-
-    /* ── CONTENT ── */
-    .content-area {
-      display: flex;
-      flex: 1;
-    }
-
-    .feed {
-      flex: 1;
-      min-width: 0;
-      overflow-y: auto;
-    }
-
-    .feed-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 22px 24px 12px;
-    }
-
-    .feed-title { font-size: 17px; font-weight: 500; color: #09090B; }
-
-    .feed-controls { display: flex; gap: 8px; }
-
-    .ctrl-btn {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 6px 12px;
-      border-radius: 6px;
-      background: #fff;
-      border: 1px solid #F2F2F3;
-      font-size: 12px;
-      font-weight: 500;
-      color: #53565A;
-      cursor: pointer;
-      font-family: 'Onest', sans-serif;
-    }
-
-    .year-divider {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 4px 24px 10px;
-    }
-
-    .yr-label { font-size: 13px; font-weight: 600; color: #4F4F4F; white-space: nowrap; }
-    .yr-line { flex: 1; height: 1px; background: #E4E4E7; }
-
-    .activity-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 10px 24px;
-      transition: background 0.1s;
-    }
-
-    .activity-item:hover { background: #FAFAFA; }
-
-    .act-icon-wrap {
-      width: 20px;
-      height: 20px;
-      border-radius: 5px;
-      background: #F0F0F0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 1px;
-      color: #53565A;
-    }
-
-    .act-body { flex: 1; min-width: 0; }
-
-    .act-line {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      flex-wrap: wrap;
-    }
-
-    .act-avatar {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 7px;
-      font-weight: 600;
-      flex-shrink: 0;
-    }
-
-    .act-text { font-size: 12px; font-weight: 500; color: #4F4F4F; }
-    .act-time { font-size: 11px; color: #A1A1AA; }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      padding: 3px 8px;
-      border-radius: 20px;
-      font-size: 10px;
-      font-weight: 500;
-      white-space: nowrap;
-      font-family: 'Onest', sans-serif;
-    }
-
-    .pill-gray    { background: #F4F4F5; color: #52525B; border: 1px solid #E4E4E7; }
-    .pill-rose    { background: #FFE4E6; color: #F43F5E; border: 1px solid #FECDD3; }
-    .pill-sky     { background: #E0F2FE; color: #0EA5E9; border: 1px solid #BAE6FD; }
-    .pill-green   { background: #DCFCE7; color: #16A34A; border: 1px solid #BBF7D0; }
-    .pill-orange  { background: #FFEDD5; color: #EA580C; border: 1px solid #FED7AA; }
-    .pill-indigo  { background: #E0E7FF; color: #4F46E5; border: 1px solid #C7D2FE; }
-
-    .act-changes {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding: 10px 0 4px 26px;
-    }
-
-    .change-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      color: #53565A;
-    }
-
-    .change-key { font-weight: 500; color: #52525B; min-width: 120px; }
-    .arr { color: #ADB7BD; }
-
-    .cal-card {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: #fff;
-      border: 1px solid #F3F4F6;
-      border-radius: 12px;
-      padding: 10px 16px;
-      margin: 4px 0;
-      box-shadow: 0 4px 14px rgba(0,0,0,.03);
-    }
-
-    .cal-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      background: #FAFAFA;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .cal-info { flex: 1; }
-    .cal-title { font-size: 14px; font-weight: 500; color: #4F4F4F; }
-
-    .cal-meta {
-      font-size: 11px;
-      color: #525866;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 3px;
-    }
-
-    .cal-dot { width: 3px; height: 3px; border-radius: 50%; background: #D9D9D9; }
-
-    /* ── RIGHT PANEL ── */
-    .right-panel {
-      width: 360px;
-      min-width: 360px;
-      border-left: 1px solid #EDEDED;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .rp-tabs {
-      display: flex;
-      border-bottom: 1px solid #EDEDED;
-      padding: 0 16px;
-      position: sticky;
-      top: 64px;
-      background: #fff;
-      z-index: 5;
-    }
-
-    .rp-tab {
-      padding: 10px 14px 12px;
-      font-size: 13px;
-      color: #8D9196;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-    }
-
-    .rp-tab.active { font-weight: 500; color: #4F4F4F; border-bottom-color: #4F4F4F; }
-
-    .rp-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px 16px;
-    }
-
-    .rp-section-title { font-size: 15px; font-weight: 500; color: #4F4F4F; margin-bottom: 16px; }
-
-    .record-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .rec-label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      width: 130px;
-      font-size: 11px;
-      color: #53565A;
-      flex-shrink: 0;
-      padding-top: 1px;
-    }
-
-    .rec-val { font-size: 12px; color: #4F4F4F; font-weight: 500; }
-    .rec-val a { color: #4F4F4F; text-decoration: underline; text-underline-offset: 2px; }
-
-    .rp-divider { height: 1px; background: #F3F4F6; margin: 16px 0; }
-
-    .stars { display: flex; gap: 3px; }
-    .star-filled { color: #F97316; font-size: 13px; }
-    .star-empty  { color: #E4E4E7; font-size: 13px; }
-
-    .dot-status { display: flex; align-items: center; gap: 5px; font-size: 12px; }
-    .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-
-    .show-all {
-      font-size: 12px;
-      font-weight: 500;
-      color: #4F4F4F;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      margin-bottom: 16px;
-    }
-
-    /* ── STRIPE LOGO INLINE SVG ── */
-    .stripe-logo { display: inline-flex; align-items: center; justify-content: center; }
-
-    /* ── RESPONSIVE: collapse right panel below 1100px ── */
-    @media (max-width: 1100px) {
-      .right-panel { display: none; }
-    }
-
-    @media (max-width: 780px) {
-      .sidebar { display: none; }
-      .entity-actions .action-btn:not(.primary) { display: none; }
-    }
-  </style>
-</head>
-<body>
-<div class="dash">
-
-  <!-- ════════════════ SIDEBAR ════════════════ -->
-  <aside class="sidebar">
-    <div class="ws-header">
-      <div class="ws-brand">
-        <div class="brand-icon"></div>
-        <span class="ws-name">TradeFlow</span>
-        <span class="ws-chevron">⌄</span>
-      </div>
-      <div class="ws-avatar">AL</div>
-    </div>
-
-    <div class="search-box">
-      <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="4.5" stroke="#C2C2C2" stroke-width="1.4"/><path d="m10.5 10.5 3 3" stroke="#C2C2C2" stroke-width="1.4" stroke-linecap="round"/></svg>
-      <span>Search anything</span>
-      <span class="kbd">/</span>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-item">
-        <div class="nav-icon">
-          <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M2 4h12M2 8h8M2 12h5" stroke="#53565A" stroke-width="1.4" stroke-linecap="round"/></svg>
-        </div>
-        Notifications
-        <span class="nav-badge">9</span>
-      </div>
-      <div class="nav-item">
-        <div class="nav-icon">
-          <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1" stroke="#53565A" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="#53565A" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="#53565A" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="#53565A" stroke-width="1.3"/></svg>
-        </div>
-        Dashboard
-      </div>
-      <div class="nav-item">
-        <div class="nav-icon">
-          <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" stroke="#53565A" stroke-width="1.3"/></svg>
-        </div>
-        Assigned to me
-      </div>
-      <div class="nav-item">
-        <div class="nav-icon">
-          <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M8 2.5 9.8 6.2l4.2.6-3 3 .7 4.2L8 12l-3.7 1.9.7-4.2-3-3 4.2-.6z" stroke="#53565A" stroke-width="1.3"/></svg>
-        </div>
-        Task
-      </div>
-      <div class="nav-item">
-        <div class="nav-icon">
-          <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M3 3h10v10H3z" stroke="#53565A" stroke-width="1.3" rx="1"/></svg>
-        </div>
-        Projects
-      </div>
-      <div class="nav-item">
-        <div class="nav-icon">
-          <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v8H3zM6 4V2M10 4V2" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg>
-        </div>
-        Schedule
-      </div>
-      <div class="nav-item">
-        <div class="nav-icon">
-          <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><circle cx="5.5" cy="5" r="2.5" stroke="#53565A" stroke-width="1.3"/><path d="M1 14c0-2.5 2-4.5 4.5-4.5S10 11.5 10 14" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/><circle cx="11" cy="5" r="2" stroke="#53565A" stroke-width="1.2" opacity=".6"/><path d="M13 14c0-1.8-1-3.2-2.5-3.8" stroke="#53565A" stroke-width="1.2" stroke-linecap="round" opacity=".6"/></svg>
-        </div>
-        Customers
-      </div>
-      <div class="nav-item active">
-        <div class="nav-icon">
-          <svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M2 3h4v4H2zM10 3h4v4h-4zM2 9h4v4H2zM10 9h4v4h-4z" stroke="#4F4F4F" stroke-width="1.3"/></svg>
-        </div>
-        Companies
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+.hero-wrap {
+  background: #121212;
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: #fff;
+  width: 100%;
+}
+
+nav {
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding: 0 48px;
+}
+
+.nav-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+
+.nav-logo {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: rgba(255,255,255,0.35);
+  text-decoration: none;
+  font-size: 13.5px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-ghost-nav {
+  color: rgba(255,255,255,0.35);
+  font-size: 13.5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.btn-primary-nav {
+  background: #fff;
+  color: #121212;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.hero-content {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 72px 48px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 4px;
+  padding: 5px 12px 5px 10px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 28px;
+  background: rgba(255,255,255,0.04);
+}
+
+h1 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 58px;
+  line-height: 1.0;
+  font-weight: 600;
+  letter-spacing: -2px;
+  color: #fff;
+}
+
+.hero-right {
+  padding-top: 52px;
+}
+
+.hero-desc {
+  font-size: 15px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.85;
+  margin-bottom: 10px;
+  max-width: 440px;
+  font-weight: 300;
+}
+
+.hero-sub {
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.28);
+  line-height: 1.75;
+  margin-bottom: 32px;
+  max-width: 440px;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.cta-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 44px;
+}
+
+.btn-cta {
+  background: #fff;
+  color: #121212;
+  border: none;
+  padding: 11px 22px;
+  border-radius: 4px;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.btn-outline {
+  background: transparent;
+  color: rgba(255,255,255,0.45);
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 11px 22px;
+  border-radius: 4px;
+  font-size: 13.5px;
+  cursor: pointer;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.trust-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.trust-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.2);
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.trust-logos {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.trust-logo {
+  border: 1px solid rgba(255,255,255,0.09);
+  padding: 5px 13px;
+  border-radius: 4px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.28);
+  white-space: nowrap;
+  background: rgba(255,255,255,0.02);
+}
+
+/* pills row */
+.features-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 32px 48px 0;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.feature-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px;
+  padding: 5px 12px;
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.32);
+  background: rgba(255,255,255,0.02);
+  font-family: 'IBM Plex Mono', monospace;
+  white-space: nowrap;
+}
+
+.feature-pill-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* dashboard */
+.dashboard-outer {
+  max-width: 1300px;
+  margin: 40px auto 0;
+  padding: 0 48px;
+}
+
+.dashboard-wrap {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+  background: #1c1c1c;
+}
+
+.dash-titlebar {
+  background: #1f1f1f;
+  padding: 9px 16px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.dot-r { background: #ff5f57; }
+.dot-y { background: #ffbd2e; }
+.dot-g { background: #28c940; }
+
+.dash-url {
+  flex: 1;
+  text-align: center;
+  font-size: 10.5px;
+  color: rgba(255,255,255,0.16);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.dash-body {
+  display: grid;
+  grid-template-columns: 200px 1fr 360px;
+  height: 460px;
+}
+
+.dash-sidebar {
+  background: #1c1c1c;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.dash-logo {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+  padding: 0 6px;
+}
+
+.dash-nav-item {
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.32);
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.dash-nav-item.active {
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.82);
+}
+
+.watchlist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+
+.watchlist-label {
+  font-size: 9.5px;
+  color: rgba(255,255,255,0.2);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.wl-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+}
+
+.wl-ticker {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  font-family: 'IBM Plex Mono', monospace;
+  width: 48px;
+}
+
+.wl-price {
+  font-size: 10.5px;
+  color: rgba(255,255,255,0.32);
+  font-family: 'IBM Plex Mono', monospace;
+  flex: 1;
+  text-align: right;
+}
+
+.wl-chg { font-size: 10px; font-family: 'IBM Plex Mono', monospace; width: 44px; text-align: right; }
+.wl-chg.pos { color: #4ade80; }
+.wl-chg.neg { color: #f87171; }
+
+.dash-center {
+  background: #181818;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dash-chat-header {
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.dash-briefing {
+  flex: 1;
+  padding: 14px 18px;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.45);
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.briefing-section {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #d97706;
+  margin: 10px 0 4px;
+  font-family: 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.briefing-section:first-child { margin-top: 0; }
+.briefing-highlight { color: #d97706; font-weight: 500; }
+
+.dash-input-wrap {
+  padding: 10px 14px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.dash-input {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 4px;
+  padding: 7px 12px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.18);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.dash-right {
+  background: #1c1c1c;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dash-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+
+.panel-title {
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.live-dot { width: 5px; height: 5px; background: #4ade80; border-radius: 50%; flex-shrink: 0; }
+
+.chart-section {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+
+.chart-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 7px;
+}
+
+.chart-tag {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.chart-labels {
+  display: flex;
+  gap: 10px;
+}
+
+.chart-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  color: rgba(255,255,255,0.25);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.chart-swatch { width: 14px; height: 2px; border-radius: 1px; }
+
+.sector-section {
+  flex: 1;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+
+.section-tag {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 9px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.sector-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 7px;
+}
+
+.sector-name { font-size: 10px; width: 100px; flex-shrink: 0; font-family: 'IBM Plex Mono', monospace; }
+.sector-bar-bg { flex: 1; height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; }
+.sector-bar-fill { height: 100%; border-radius: 2px; opacity: 0.8; }
+
+.sector-price {
+  font-size: 10px;
+  color: rgba(255,255,255,0.38);
+  font-family: 'IBM Plex Mono', monospace;
+  width: 48px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.sector-chg {
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  width: 42px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.sub-charts { display: grid; grid-template-columns: 1fr 1fr; flex-shrink: 0; }
+
+.sub-chart {
+  padding: 9px 12px;
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+.sub-chart:last-child { border-right: none; }
+
+.sub-chart-title {
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.sub-price {
+  font-size: 10px;
+  color: rgba(255,255,255,0.32);
+  font-family: 'IBM Plex Mono', monospace;
+  margin-top: 3px;
+}
+</style>
+
+<div class="hero-wrap">
+
+  <nav>
+    <div class="nav-inner">
+      <span class="nav-logo">Kimpton.</span>
+      <ul class="nav-links">
+        <li><a href="#">Platform</a></li>
+        <li><a href="#">Security</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">News</a></li>
+      </ul>
+      <div class="nav-right">
+        <button class="btn-ghost-nav">Log in</button>
+        <button class="btn-primary-nav">Request a demo ↗</button>
       </div>
     </div>
+  </nav>
 
-    <div class="divider"></div>
-    <span class="ws-label">Workspace ⌄</span>
-
-    <div class="nav-item">
-      <div class="nav-icon"><svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M4 8h5M4 5h8M4 11h3" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg></div>
-      Attachment
-    </div>
-    <div class="nav-item">
-      <div class="nav-icon"><svg width="14" height="14" fill="none" viewBox="0 0 16 16"><path d="M3 2h7l3 3v9H3z" stroke="#53565A" stroke-width="1.3"/><path d="M10 2v4h4" stroke="#53565A" stroke-width="1.3"/></svg></div>
-      Documents
-    </div>
-    <div class="nav-item">
-      <div class="nav-icon"><svg width="14" height="14" fill="none" viewBox="0 0 16 16"><rect x="2" y="4" width="12" height="9" rx="1" stroke="#53565A" stroke-width="1.3"/><path d="M5 4V3M11 4V3M2 8h12" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg></div>
-      Emails
+  <div class="hero-content">
+    <div>
+      <div class="badge-pill">
+        Built by ex-Goldman engineers &nbsp;·&nbsp; YC-backed →
+      </div>
+      <h1>AI research,<br>built for the<br>buy side.</h1>
     </div>
 
-    <div class="nav-footer">
-      <div class="divider"></div>
-      <div class="nav-item">
-        <div class="nav-icon"><svg width="14" height="14" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke="#53565A" stroke-width="1.3"/><path d="M8 6v2M8 10v.5" stroke="#53565A" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-        Help center
-        <svg style="margin-left:auto;color:#8D9196" width="10" height="10" fill="none" viewBox="0 0 12 12"><path d="M3 9 9 3M5 3h4v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="hero-right">
+      <p class="hero-desc">Portfolio managers spend most of their day on work that isn't investing — filings, earnings prep, 13Fs, peer benchmarking, thesis validation, trade writeups. Kimpton runs all of it autonomously.</p>
+      <p class="hero-sub">Humans make the decisions. AI does everything else.</p>
+      <div class="cta-row">
+        <button class="btn-cta">Request a demo ↗</button>
+        <button class="btn-outline">See the platform →</button>
       </div>
-      <div class="nav-item">
-        <div class="nav-icon"><svg width="14" height="14" fill="none" viewBox="0 0 16 16"><rect x="1" y="4" width="14" height="9" rx="1" stroke="#53565A" stroke-width="1.3"/><path d="M1 7h14" stroke="#53565A" stroke-width="1.3"/><circle cx="12" cy="11" r="1" fill="#53565A"/></svg></div>
-        Billing
-      </div>
-    </div>
-  </aside>
-
-  <!-- ════════════════ MAIN ════════════════ -->
-  <main class="main">
-
-    <!-- Top bar -->
-    <header class="topbar">
-      <div class="breadcrumb">
-        <div class="bc-item">
-          <svg width="13" height="13" fill="none" viewBox="0 0 16 16"><path d="M2 3h4v4H2zM10 3h4v4h-4zM2 9h4v4H2zM10 9h4v4h-4z" stroke="#53565A" stroke-width="1.3"/></svg>
-          Companies
+      <div class="trust-row">
+        <span class="trust-label">Powered by</span>
+        <div class="trust-logos">
+          <span class="trust-logo">FactSet</span>
+          <span class="trust-logo">Polymarket</span>
+          <span class="trust-logo">Plaid</span>
+          <span class="trust-logo">Y Combinator</span>
         </div>
-        <span class="bc-sep">»</span>
-        <div class="bc-current">
-          <!-- Stripe logo -->
-          <svg width="14" height="14" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#635BFF"/><path d="M13.4 11.6c0-1.1.9-1.5 2.3-1.5 2.1 0 4.7.6 6.8 1.8V6.2C20.3 5.4 18 5 15.7 5 10 5 6.2 8 6.2 11.9c0 6.2 8.5 5.2 8.5 7.9 0 1.3-1.1 1.7-2.6 1.7-2.2 0-5.1-.9-7.4-2.2V25c2.5 1.1 5.1 1.5 7.4 1.5 5.8 0 9.9-2.9 9.9-6.9-.1-6.7-8.6-5.5-8.6-8z" fill="#fff"/></svg>
-          Stripe
-        </div>
-      </div>
-      <div class="topbar-right">
-        <span class="update-text">Last update 3 days ago</span>
-        <div class="avatars">
-          <div class="av" style="background:#C0D5FF;color:#3b5bdb">AL</div>
-          <div class="av" style="background:#D3F9D8;color:#2f9e44">MK</div>
-          <div class="av" style="background:#FFD8A8;color:#d9480f">RJ</div>
-          <div class="av" style="background:#F3D9FA;color:#7950f2">SP</div>
-        </div>
-        <button class="share-btn">
-          <svg width="13" height="13" fill="none" viewBox="0 0 16 16"><path d="M5 8h8M9 4l4 4-4 4" stroke="#53565A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Share
-        </button>
-      </div>
-    </header>
-
-    <!-- Entity bar -->
-    <div class="entity-bar">
-      <div class="entity-left">
-        <svg width="22" height="22" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#635BFF"/><path d="M13.4 11.6c0-1.1.9-1.5 2.3-1.5 2.1 0 4.7.6 6.8 1.8V6.2C20.3 5.4 18 5 15.7 5 10 5 6.2 8 6.2 11.9c0 6.2 8.5 5.2 8.5 7.9 0 1.3-1.1 1.7-2.6 1.7-2.2 0-5.1-.9-7.4-2.2V25c2.5 1.1 5.1 1.5 7.4 1.5 5.8 0 9.9-2.9 9.9-6.9-.1-6.7-8.6-5.5-8.6-8z" fill="#fff"/></svg>
-        <span class="entity-name">Stripe</span>
-        <span class="entity-star">☆</span>
-      </div>
-      <div class="entity-actions">
-        <button class="action-btn">
-          <svg width="13" height="13" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v8H3z" stroke="#53565A" stroke-width="1.3" rx="1"/><path d="M6 7h4M6 10h2" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg>
-          Add to list
-        </button>
-        <button class="action-btn">
-          <svg width="13" height="13" fill="none" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10" stroke="#53565A" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Run workflow
-          <svg width="9" height="9" fill="none" viewBox="0 0 12 12"><path d="M2 6h7M5 3l4 3-4 3" stroke="#53565A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <button class="action-btn primary">
-          <svg width="13" height="13" fill="none" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
-          Compose email
-        </button>
       </div>
     </div>
+  </div>
 
-    <!-- Tabs -->
-    <nav class="tabs-bar">
-      <div class="tab active">
-        <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M2 12 6 5l3 4 2.5-3L14 12" stroke="#4F4F4F" stroke-width="1.4" stroke-linejoin="round"/></svg>
-        Activity <span class="tab-count">143</span>
+  <div class="features-row">
+    <span class="feature-pill"><span class="feature-pill-dot" style="background:#38bdf8"></span>Trade Proposals</span>
+    <span class="feature-pill"><span class="feature-pill-dot" style="background:#a78bfa"></span>Deep Research</span>
+    <span class="feature-pill"><span class="feature-pill-dot" style="background:#4ade80"></span>Agentic Charting</span>
+    <span class="feature-pill"><span class="feature-pill-dot" style="background:#d97706"></span>Scheduled Skills</span>
+    <span class="feature-pill"><span class="feature-pill-dot" style="background:#fb7185"></span>13F & Ownership</span>
+    <span class="feature-pill"><span class="feature-pill-dot" style="background:#38bdf8"></span>Earnings Prep</span>
+    <span class="feature-pill"><span class="feature-pill-dot" style="background:#a78bfa"></span>Backtests</span>
+    <span class="feature-pill"><span class="feature-pill-dot" style="background:#4ade80"></span>mandate.md driven</span>
+  </div>
+
+  <div class="dashboard-outer">
+    <div class="dashboard-wrap">
+      <div class="dash-titlebar">
+        <span class="dot dot-r"></span>
+        <span class="dot dot-y"></span>
+        <span class="dot dot-g"></span>
+        <span class="dash-url">app.kimpton.ai — Trade War Briefing · April 2026</span>
       </div>
-      <div class="tab">
-        <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1" stroke="#8D9196" stroke-width="1.3"/></svg>
-        Emails
-      </div>
-      <div class="tab">
-        <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v8H3z" stroke="#8D9196" stroke-width="1.3" rx="1"/></svg>
-        Notes <span class="tab-count">12</span>
-      </div>
-      <div class="tab">
-        <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v8H3z" stroke="#8D9196" stroke-width="1.3" rx="1"/><path d="M6 7h4" stroke="#8D9196" stroke-width="1.3" stroke-linecap="round"/></svg>
-        Tasks <span class="tab-count">3</span>
-      </div>
-      <div class="tab">
-        <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 2h7l3 3v9H3z" stroke="#8D9196" stroke-width="1.3"/></svg>
-        Files <span class="tab-count">4</span>
-      </div>
-    </nav>
 
-    <!-- Content -->
-    <div class="content-area">
+      <div class="dash-body">
 
-      <!-- Feed -->
-      <div class="feed">
-        <div class="feed-header">
-          <span class="feed-title">Activity</span>
-          <div class="feed-controls">
-            <button class="ctrl-btn">
-              <svg width="11" height="11" fill="none" viewBox="0 0 14 14"><path d="M1 3h12M3 7h8M5 11h4" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg>
-              Filters
-            </button>
-            <button class="ctrl-btn">
-              <svg width="11" height="11" fill="none" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5" stroke="#53565A" stroke-width="1.3"/><path d="M5 7h2v3" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg>
-              Manage access
-            </button>
+        <div class="dash-sidebar">
+          <div class="dash-logo">Kimpton.</div>
+          <div class="dash-nav-item active">New Analyst</div>
+          <div class="dash-nav-item">Portfolio</div>
+          <div class="dash-nav-item">Dashboards</div>
+          <div class="dash-nav-item">Charts</div>
+          <div class="dash-nav-item">Skills</div>
+          <div class="dash-nav-item">Trade Proposals</div>
+          <div class="dash-nav-item">Prediction Engine</div>
+          <div class="dash-nav-item">Vault</div>
+          <div class="watchlist-header">
+            <span class="watchlist-label">Watchlist</span>
+            <span style="color:rgba(255,255,255,0.2);font-size:14px;line-height:1">+</span>
+          </div>
+          <div class="wl-row"><span class="wl-ticker">AAPL</span><span class="wl-price">259.20</span><span class="wl-chg neg">-0.49%</span></div>
+          <div class="wl-row"><span class="wl-ticker">NVDA</span><span class="wl-price">189.32</span><span class="wl-chg pos">+0.37%</span></div>
+          <div class="wl-row"><span class="wl-ticker">GOOGL</span><span class="wl-price">321.07</span><span class="wl-chg pos">+1.21%</span></div>
+          <div class="wl-row"><span class="wl-ticker">AMZN</span><span class="wl-price">239.82</span><span class="wl-chg pos">+0.60%</span></div>
+          <div class="wl-row"><span class="wl-ticker">SPY</span><span class="wl-price">685.87</span><span class="wl-chg pos">+0.94%</span></div>
+          <div class="wl-row"><span class="wl-ticker">GLD</span><span class="wl-price">435.31</span><span class="wl-chg neg">-0.42%</span></div>
+          <div class="wl-row"><span class="wl-ticker">META</span><span class="wl-price">634.79</span><span class="wl-chg pos">+0.78%</span></div>
+        </div>
+
+        <div class="dash-center">
+          <div class="dash-chat-header">Trade War Briefing — April 2026</div>
+          <div class="dash-briefing">
+            <div class="briefing-section">Where we stand on tariffs</div>
+            <p>The US-China trade war has entered a new, more institutionalized phase. Peak tariff rates of 145% have been walked back through bilateral negotiations, with Chinese goods now sitting at approximately <span class="briefing-highlight">47% effective tariff</span>. A separate <span class="briefing-highlight">10% fentanyl-related tariff</span> was cut as part of a broader deal that also included Beijing pausing rare earth export controls — a significant concession given China controls approximately 60% of global rare earth processing capacity.</p>
+            <p style="margin-top:9px">The wild card is the <span class="briefing-highlight">February 2026 Supreme Court ruling</span> that constrained presidential tariff authority, shifting congressional leverage and boosting China's negotiating position. If the upcoming Trump-Xi summit produces a framework, <span class="briefing-highlight">$FXI could see a sharp re-rating</span>. If it fails, rare earth controls coming back online would be the single biggest negative catalyst across all four ETFs.</p>
+            <div class="briefing-section">Sector-by-sector read</div>
+            <p><span class="briefing-highlight">$XLI (Industrials, $172.72):</span> The standout. Domestic infrastructure spending via budget appropriations has more than offset tariff headwinds, making this the most defensible position in the basket right now.</p>
+          </div>
+          <div class="dash-input-wrap">
+            <div class="dash-input">Ask anything about the markets</div>
           </div>
         </div>
 
-        <div class="year-divider"><span class="yr-label">2025</span><div class="yr-line"></div></div>
-
-        <!-- Activity 1 — expanded -->
-        <div class="activity-item">
-          <div class="act-icon-wrap">
-            <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1" stroke="#53565A" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="#53565A" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="#53565A" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="#53565A" stroke-width="1.3"/></svg>
-          </div>
-          <div class="act-body">
-            <div class="act-line">
-              <div class="act-avatar" style="background:#C0D5FF;color:#3b5bdb">AL</div>
-              <span class="act-text">Alex Liu changed Stage and 7 other attributes in</span>
-              <span class="pill pill-gray">📌 Sales</span>
-              <span class="act-time">12 minutes ago</span>
-            </div>
-            <div class="act-changes">
-              <div class="change-row">
-                <span class="change-key">Stage</span><span class="arr">→</span>
-                <span class="dot-status"><span class="dot" style="background:#F97316"></span><span style="color:#F97316;font-size:11px;font-weight:500">Meeting</span></span>
-              </div>
-              <div class="change-row">
-                <span class="change-key">Priority</span><span class="arr">→</span>
-                <span class="pill pill-sky">Medium</span>
-              </div>
-              <div class="change-row">
-                <span class="change-key">Contract</span><span class="arr">→</span>
-                <span style="font-size:11px;font-weight:500;color:#4F4F4F">$240,000</span>
-              </div>
-              <div class="change-row">
-                <span class="change-key">Close date</span><span class="arr">→</span>
-                <span style="font-size:11px;font-weight:500;color:#4F4F4F">Oct 29, 2025</span>
-              </div>
-              <div class="change-row">
-                <span class="change-key">Close confidence</span><span class="arr">→</span>
-                <div class="stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">★</span></div>
-              </div>
-              <div class="change-row">
-                <span class="change-key">Close-lost reason</span><span class="arr">→</span>
-                <span style="font-size:11px;color:#4F4F4F">Client refused to schedule a call</span>
-              </div>
-              <div class="change-row">
-                <span class="change-key">Notes</span><span class="arr">→</span>
-                <span style="font-size:11px;color:#4F4F4F">Always ask for email in the first interaction</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Activity 2 -->
-        <div class="activity-item">
-          <div class="act-icon-wrap">
-            <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v9H3z" stroke="#53565A" stroke-width="1.3" rx="1"/><path d="M6 4V2M10 4V2" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg>
-          </div>
-          <div class="act-body">
-            <div class="act-line">
-              <div class="act-avatar" style="background:#D3F9D8;color:#2f9e44">MK</div>
-              <span class="act-text">Maya Kim added Stripe to</span>
-              <span class="pill pill-gray">📌 Sales</span>
-              <span class="act-time">3 days ago</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Activity 3 -->
-        <div class="activity-item">
-          <div class="act-icon-wrap">
-            <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke="#53565A" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg>
-          </div>
-          <div class="act-body">
-            <div class="act-line">
-              <div class="act-avatar" style="background:#FFD8A8;color:#d9480f">RJ</div>
-              <span class="act-text">Raj Joshi added the status to</span>
-              <span class="pill pill-rose">✦ Negotiation</span>
-              <span class="act-time">4 days ago</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Activity 4 -->
-        <div class="activity-item">
-          <div class="act-icon-wrap">
-            <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M4 8l4-4 4 4M8 4v8" stroke="#53565A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <div class="act-body">
-            <div class="act-line">
-              <svg width="14" height="14" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#635BFF"/><path d="M13.4 11.6c0-1.1.9-1.5 2.3-1.5 2.1 0 4.7.6 6.8 1.8V6.2C20.3 5.4 18 5 15.7 5 10 5 6.2 8 6.2 11.9c0 6.2 8.5 5.2 8.5 7.9 0 1.3-1.1 1.7-2.6 1.7-2.2 0-5.1-.9-7.4-2.2V25c2.5 1.1 5.1 1.5 7.4 1.5 5.8 0 9.9-2.9 9.9-6.9-.1-6.7-8.6-5.5-8.6-8z" fill="#fff"/></svg>
-              <span class="act-text">stripe.com was added to domains</span>
-              <span class="act-time">about 30 days ago</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Activity 5 -->
-        <div class="activity-item">
-          <div class="act-icon-wrap">
-            <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v8H3z" stroke="#53565A" stroke-width="1.3" rx="1"/><path d="M6 7h4M6 10h2" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg>
-          </div>
-          <div class="act-body">
-            <div class="act-line">
-              <svg width="14" height="14" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#635BFF"/><path d="M13.4 11.6c0-1.1.9-1.5 2.3-1.5 2.1 0 4.7.6 6.8 1.8V6.2C20.3 5.4 18 5 15.7 5 10 5 6.2 8 6.2 11.9c0 6.2 8.5 5.2 8.5 7.9 0 1.3-1.1 1.7-2.6 1.7-2.2 0-5.1-.9-7.4-2.2V25c2.5 1.1 5.1 1.5 7.4 1.5 5.8 0 9.9-2.9 9.9-6.9-.1-6.7-8.6-5.5-8.6-8z" fill="#fff"/></svg>
-              <span class="act-text">Description added</span>
-              <span class="act-time">about 30 days ago</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="year-divider" style="margin-top:8px"><span class="yr-label" style="color:#A1A1AA">2024</span><div class="yr-line"></div></div>
-
-        <!-- Calendar card -->
-        <div class="activity-item" style="padding-left:58px">
-          <div class="cal-card" style="flex:1">
-            <div class="cal-icon">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" fill="#4285F4" opacity=".12"/><rect x="3" y="5" width="18" height="16" rx="2" stroke="#4285F4" stroke-width="1.4"/><path d="M3 10h18" stroke="#4285F4" stroke-width="1.2"/><path d="M8 3v4M16 3v4" stroke="#4285F4" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="15" r="1" fill="#4285F4"/><circle cx="12" cy="15" r="1" fill="#4285F4"/></svg>
-            </div>
-            <div class="cal-info">
-              <div class="cal-title">Weekly team catchup</div>
-              <div class="cal-meta">
-                <span>May 23</span><span class="cal-dot"></span><span>12:00 PM – 01:00 PM</span>
-              </div>
-            </div>
-            <span style="color:#4F4F4F;font-size:14px;cursor:pointer">↗</span>
-          </div>
-        </div>
-
-        <!-- Activity 6 -->
-        <div class="activity-item">
-          <div class="act-icon-wrap">
-            <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="5" cy="5" r="2.5" stroke="#53565A" stroke-width="1.3"/><circle cx="11" cy="11" r="2.5" stroke="#53565A" stroke-width="1.3"/><path d="M7 5h4M5 11h-2" stroke="#53565A" stroke-width="1.2" stroke-linecap="round"/></svg>
-          </div>
-          <div class="act-body">
-            <div class="act-line">
-              <div class="act-avatar" style="background:#F3D9FA;color:#7950f2">SP</div>
-              <span class="act-text">Sofia Park added the employer range to</span>
-              <span class="pill pill-green">1K–5K</span>
-              <span class="act-time">about 1 year ago</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Activity 7 -->
-        <div class="activity-item">
-          <div class="act-icon-wrap">
-            <svg width="12" height="12" fill="none" viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="10" rx="1" stroke="#53565A" stroke-width="1.3"/><path d="M1 7h14" stroke="#53565A" stroke-width="1.2"/></svg>
-          </div>
-          <div class="act-body">
-            <div class="act-line">
-              <svg width="14" height="14" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#635BFF"/><path d="M13.4 11.6c0-1.1.9-1.5 2.3-1.5 2.1 0 4.7.6 6.8 1.8V6.2C20.3 5.4 18 5 15.7 5 10 5 6.2 8 6.2 11.9c0 6.2 8.5 5.2 8.5 7.9 0 1.3-1.1 1.7-2.6 1.7-2.2 0-5.1-.9-7.4-2.2V25c2.5 1.1 5.1 1.5 7.4 1.5 5.8 0 9.9-2.9 9.9-6.9-.1-6.7-8.6-5.5-8.6-8z" fill="#fff"/></svg>
-              <span class="act-text">Stripe was added</span>
-              <span class="act-time">about 1 year ago</span>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /feed -->
-
-      <!-- ════════════════ RIGHT PANEL ════════════════ -->
-      <aside class="right-panel">
-        <div class="rp-tabs">
-          <div class="rp-tab active">Details</div>
-          <div class="rp-tab">Comments <span style="font-size:10px;opacity:.6">12</span></div>
-        </div>
-        <div class="rp-body">
-          <div class="rp-section-title">Record details</div>
-
-          <div class="record-row">
-            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#53565A" stroke-width="1.3"/></svg> Company</div>
-            <div class="rec-val" style="display:flex;align-items:center;gap:5px">
-              <svg width="14" height="14" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="#635BFF"/><path d="M13.4 11.6c0-1.1.9-1.5 2.3-1.5 2.1 0 4.7.6 6.8 1.8V6.2C20.3 5.4 18 5 15.7 5 10 5 6.2 8 6.2 11.9c0 6.2 8.5 5.2 8.5 7.9 0 1.3-1.1 1.7-2.6 1.7-2.2 0-5.1-.9-7.4-2.2V25c2.5 1.1 5.1 1.5 7.4 1.5 5.8 0 9.9-2.9 9.9-6.9-.1-6.7-8.6-5.5-8.6-8z" fill="#fff"/></svg>
-              Stripe
-            </div>
-          </div>
-
-          <div class="record-row">
-            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M5 8h5M5 5h8M5 11h3" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg> Domains</div>
-            <div class="rec-val"><a href="#">stripe.com ↗</a></div>
-          </div>
-
-          <div class="record-row">
-            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke="#53565A" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg> Status</div>
-            <div class="rec-val"><span class="pill pill-rose">✦ Negotiation</span></div>
-          </div>
-
-          <div class="record-row">
-            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v8H3z" stroke="#53565A" stroke-width="1.3" rx="1"/></svg> Description</div>
-            <div class="rec-val" style="font-weight:400;font-size:11px;color:#53565A;max-width:170px;line-height:1.5">Global payment infrastructure platform for internet businesses</div>
-          </div>
-
-          <div class="record-row">
-            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="5" r="2.5" stroke="#53565A" stroke-width="1.3"/><path d="M3 14c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg> Person to contact</div>
-            <div class="rec-val" style="display:flex;align-items:center;gap:5px">
-              <div style="width:16px;height:16px;border-radius:50%;background:#C0D5FF;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:600;color:#3b5bdb">AL</div>
-              Alex Liu
-            </div>
-          </div>
-
-          <div class="record-row">
-            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M2 12 6 5l3 4 2.5-3L14 12" stroke="#53565A" stroke-width="1.3" stroke-linejoin="round"/></svg> Categories</div>
-            <div style="display:flex;gap:4px;flex-wrap:wrap">
-              <span class="pill pill-orange">B2B</span>
-              <span class="pill pill-indigo">B2C</span>
-              <span class="pill pill-sky">Payments</span>
-            </div>
-          </div>
-
-          <div class="record-row">
-            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="5" cy="5" r="2.5" stroke="#53565A" stroke-width="1.3"/><circle cx="11" cy="11" r="2.5" stroke="#53565A" stroke-width="1.3"/></svg> Employer range</div>
-            <div class="rec-val"><span class="pill pill-green">1K–5K</span></div>
-          </div>
-
-          <div class="show-all">Show all values <svg width="10" height="10" fill="none" viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" stroke="#4F4F4F" stroke-width="1.3" stroke-linecap="round"/></svg></div>
-
-          <div class="rp-divider"></div>
-
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-            <span class="rp-section-title" style="margin:0">Lists</span>
-            <span style="font-size:11px;color:#4F4F4F;text-decoration:underline;text-underline-offset:2px;cursor:pointer;display:flex;align-items:center;gap:3px;font-weight:500">
-              Go to lists
-              <svg width="9" height="9" fill="none" viewBox="0 0 12 12"><path d="M2 10L10 2M5 2h5v5" stroke="#4F4F4F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="dash-right">
+          <div class="dash-panel-header">
+            <span class="panel-title">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="4" height="4" rx="1" fill="rgba(255,255,255,0.28)"/><rect x="7" y="1" width="4" height="4" rx="1" fill="rgba(255,255,255,0.28)"/><rect x="1" y="7" width="4" height="4" rx="1" fill="rgba(255,255,255,0.28)"/><rect x="7" y="7" width="4" height="4" rx="1" fill="rgba(255,255,255,0.28)"/></svg>
+              Live Snapshot
             </span>
+            <span style="font-size:9.5px;color:rgba(255,255,255,0.16);font-family:'IBM Plex Mono',monospace">13 widgets</span>
           </div>
 
-          <div class="record-row">
-            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v8H3z" stroke="#53565A" stroke-width="1.3" rx="1"/></svg> List name</div>
-            <div class="rec-val"><span class="pill pill-gray">📌 Sales</span></div>
-          </div>
-          <div class="record-row">
-            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#53565A" stroke-width="1.3"/></svg> Stage</div>
-            <div class="rec-val">
-              <span class="dot-status"><span class="dot" style="background:#F97316"></span><span style="color:#F97316;font-weight:500">Meeting</span></span>
+          <div class="chart-section">
+            <div class="chart-meta">
+              <div class="chart-tag">
+                Sector ETF Performance
+                <span class="live-dot"></span>
+                <span style="color:#4ade80">Live</span>
+              </div>
+              <div class="chart-labels">
+                <div class="chart-label"><span class="chart-swatch" style="background:#38bdf8"></span>XLI</div>
+                <div class="chart-label"><span class="chart-swatch" style="background:#d97706"></span>XLP</div>
+                <div class="chart-label"><span class="chart-swatch" style="background:#a78bfa"></span>XLY</div>
+                <div class="chart-label"><span class="chart-swatch" style="background:#fb7185"></span>FXI</div>
+              </div>
             </div>
-          </div>
-          <div class="record-row">
-            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M4 8h5M4 5h8" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg> Priority</div>
-            <div class="rec-val"><span class="pill pill-sky">Medium</span></div>
-          </div>
-          <div class="record-row">
-            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="5" r="2.5" stroke="#53565A" stroke-width="1.3"/></svg> Owner</div>
-            <div class="rec-val" style="display:flex;align-items:center;gap:5px">
-              <div style="width:16px;height:16px;border-radius:50%;background:#C0D5FF;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:600;color:#3b5bdb">AL</div>
-              Alex Liu
-            </div>
-          </div>
-          <div class="record-row">
-            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1" stroke="#53565A" stroke-width="1.3"/><path d="M5 8h6M5 11h3" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg> Contract</div>
-            <div class="rec-val">$240,000</div>
-          </div>
-          <div class="record-row">
-            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="11" rx="1" stroke="#53565A" stroke-width="1.3"/><path d="M5 2v2M11 2v2M2 8h12" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg> Close date</div>
-            <div class="rec-val">Oct 29, 2025</div>
-          </div>
-          <div class="record-row">
-            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M8 2l1.5 3 3.5.5-2.5 2.5.5 3.5L8 10l-3.5 1.9.5-3.5L2.5 5.5l3.5-.5z" stroke="#53565A" stroke-width="1.3"/></svg> Close confidence</div>
-            <div class="stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">★</span></div>
-          </div>
-          <div class="record-row">
-            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 8h10M3 5h10M3 11h5" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg> Close-lost reason</div>
-            <div class="rec-val" style="font-weight:400;color:#A1A1AA;font-size:11px">Set close-lost reason here...</div>
-          </div>
-          <div class="record-row">
-            <div class="rec-label"><svg width="12" height="12" fill="none" viewBox="0 0 16 16"><path d="M3 4h10v8H3z" stroke="#53565A" stroke-width="1.3" rx="1"/><path d="M5 8h6M5 11h3" stroke="#53565A" stroke-width="1.3" stroke-linecap="round"/></svg> Notes</div>
-            <div class="rec-val" style="font-weight:400;color:#A1A1AA;font-size:11px">Set notes here...</div>
+            <svg viewBox="0 0 330 72" width="100%" height="72" preserveAspectRatio="none">
+              <polyline points="0,62 46,50 92,36 138,42 184,26 230,30 276,16 330,10" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="0,66 46,59 92,52 138,55 184,48 230,50 276,40 330,36" fill="none" stroke="#d97706" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="0,68 46,65 92,57 138,62 184,55 230,58 276,50 330,46" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="0,70 46,70 92,66 138,68 184,64 230,67 276,62 330,59" fill="none" stroke="#fb7185" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
 
+          <div class="sector-section">
+            <div class="section-tag">52-Week Price Range by Sector</div>
+            <div class="sector-row">
+              <span class="sector-name" style="color:#38bdf8">XLI Industrials</span>
+              <div class="sector-bar-bg"><div class="sector-bar-fill" style="width:85%;background:#38bdf8"></div></div>
+              <span class="sector-price">$172.72</span>
+              <span class="sector-chg pos">+0.70%</span>
+            </div>
+            <div class="sector-row">
+              <span class="sector-name" style="color:#d97706">XLP Cons. Staples</span>
+              <div class="sector-bar-bg"><div class="sector-bar-fill" style="width:62%;background:#d97706"></div></div>
+              <span class="sector-price">$81.54</span>
+              <span class="sector-chg neg">-1.01%</span>
+            </div>
+            <div class="sector-row">
+              <span class="sector-name" style="color:#a78bfa">XLY Cons. Disc.</span>
+              <div class="sector-bar-bg"><div class="sector-bar-fill" style="width:71%;background:#a78bfa"></div></div>
+              <span class="sector-price">$113.88</span>
+              <span class="sector-chg pos">+0.88%</span>
+            </div>
+            <div class="sector-row">
+              <span class="sector-name" style="color:#fb7185">FXI China Lg-Cap</span>
+              <div class="sector-bar-bg"><div class="sector-bar-fill" style="width:38%;background:#fb7185"></div></div>
+              <span class="sector-price">$36.42</span>
+              <span class="sector-chg pos">+0.48%</span>
+            </div>
+          </div>
+
+          <div class="sub-charts">
+            <div class="sub-chart">
+              <div class="sub-chart-title">
+                <span style="width:5px;height:5px;background:#38bdf8;border-radius:50%;display:inline-block;flex-shrink:0"></span>
+                FXI China Large-Cap
+                <span class="live-dot"></span>
+              </div>
+              <svg viewBox="0 0 130 44" width="100%" height="44" preserveAspectRatio="none">
+                <polyline points="0,38 22,34 44,40 66,28 88,24 110,30 130,22" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <div class="sub-price">$41.49</div>
+            </div>
+            <div class="sub-chart">
+              <div class="sub-chart-title">
+                <span style="width:5px;height:5px;background:#a78bfa;border-radius:50%;display:inline-block;flex-shrink:0"></span>
+                XLY Consumer Disc.
+                <span class="live-dot"></span>
+              </div>
+              <svg viewBox="0 0 130 44" width="100%" height="44" preserveAspectRatio="none">
+                <polyline points="0,36 22,40 44,30 66,26 88,32 110,22 130,18" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <div class="sub-price">$124.97</div>
+            </div>
+          </div>
         </div>
-      </aside>
 
-    </div><!-- /content-area -->
-  </main>
+      </div>
+    </div>
+  </div>
+
 </div>
-</body>
-</html>
